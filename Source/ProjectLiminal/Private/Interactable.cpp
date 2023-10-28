@@ -5,6 +5,7 @@
 #include "Components/WidgetComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/TextRenderComponent.h"
 
 // Sets default values
 AInteractable::AInteractable()
@@ -46,8 +47,7 @@ void AInteractable::Tick(float DeltaTime)
 
 }
 
-void AInteractable::SetInteractPromptVisibility(bool bVisible)
+void AInteractable::SetInteractPromptVisibility(bool bIsVisible)
 {
-	InteractPrompt->SetVisibility(bVisible);
+	InteractPrompt->SetVisibility(bIsVisible);
 }
-

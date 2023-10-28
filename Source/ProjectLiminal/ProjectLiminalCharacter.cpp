@@ -81,6 +81,9 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 		//Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AProjectLiminalCharacter::Look);
+
+		// Interacting
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::InteractWithObject);
 	}
 }
 
@@ -146,6 +149,8 @@ void AProjectLiminalCharacter::SweepForInteractable()
 	{
 		CurrentInteractableObject = Cast<AInteractable>(HitResult.GetActor());
 
+		UE_LOG(LogTemp, Warning, TEXT("Current Interactable Object is: %s"), *CurrentInteractableObject->GetName());
+
 		if (CurrentInteractableObject)
 		{
 			CurrentInteractableObject->SetInteractPromptVisibility(true);
@@ -157,7 +162,22 @@ void AProjectLiminalCharacter::SweepForInteractable()
 		if (CurrentInteractableObject)
 		{
 			CurrentInteractableObject->SetInteractPromptVisibility(false);
+			UE_LOG(LogTemp, Warning, TEXT("Current Interactable Object is: NULL"));
 		}
 		CurrentInteractableObject = nullptr;
+	}
+}
+
+void AProjectLiminalCharacter::InteractWithObject()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Interact triggered"));
+
+	if (CurrentInteractableObject)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Interacting with: %s"), *CurrentInteractableObject->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Interact failed"));
 	}
 }

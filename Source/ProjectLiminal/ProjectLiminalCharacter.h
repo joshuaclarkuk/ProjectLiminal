@@ -16,6 +16,13 @@ class USoundBase;
 class UAudioComponent;
 class AInteractable;
 
+UENUM()
+enum EPlayerStates {
+	EPS_Unoccupied,
+	EPS_LookingAround,
+	EPS_Occupied
+};
+
 UCLASS(config=Game)
 class AProjectLiminalCharacter : public ACharacter
 {
@@ -36,6 +43,10 @@ class AProjectLiminalCharacter : public ACharacter
 	/** Jump Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
 	class UInputAction* JumpAction;
+
+	/** Interact Input Action */
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* InteractAction;
 
 	/** Move Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
@@ -82,6 +93,8 @@ protected:
 
 	void SweepForInteractable();
 
+	void InteractWithObject();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
 	float MovementSpeedModifier = 1.0f;
 
@@ -92,7 +105,7 @@ protected:
 	FTimerHandle SweepTimerHandle;
 
 	// Store interactable currently being looked at
-	AInteractable* CurrentInteractableObject;
+	AInteractable* CurrentInteractableObject = nullptr;
 
 protected:
 	// APawn interface
@@ -104,7 +117,5 @@ public:
 	USkeletalMeshComponent* GetMesh1P() const { return Mesh1P; }
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
-
-
 };
 

@@ -36,5 +36,5 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SetInteractPromptVisibility(bool bVisible);
+	virtual void SetInteractPromptVisibility(bool bVisible);
 };
