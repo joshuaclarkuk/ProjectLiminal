@@ -180,13 +180,13 @@ void AProjectLiminalCharacter::InteractWithObject()
 		UE_LOG(LogTemp, Warning, TEXT("Interacting with: %s, PlayerState is: Occupied"), *CurrentInteractableObject->GetName());
 		CurrentInteractableObject->SetInteractPromptVisibility(false);
 		// Switch to interaction state
-		CurrentInteractableObject->MovePlayerInFrontOfObject(FirstPersonCameraComponent, this);
+		CurrentInteractableObject->MovePlayerInFrontOfObject();
 	}
 	else if (CurrentInteractableObject && PlayerState == EPS_Occupied)
 	{
 		PlayerState = EPS_Unoccupied;
 		CurrentInteractableObject->SetInteractPromptVisibility(true);
-		CurrentInteractableObject->ReturnPlayerToFloor(FirstPersonCameraComponent, this);
+		CurrentInteractableObject->ReturnPlayerToFloor(this);
 		UE_LOG(LogTemp, Warning, TEXT("No longer interacting with: %s, PlayerState is: Unoccupied"), *CurrentInteractableObject->GetName());
 	}
 }

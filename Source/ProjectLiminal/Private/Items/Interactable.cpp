@@ -9,9 +9,7 @@
 #include "Components/TextRenderComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/ProjectLiminalCharacter.h"
-#include <Kismet/GameplayStatics.h>
-#include <Kismet/KismetMathLibrary.h>
-#include "GameFramework/CharacterMovementComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 
 // Sets default values
 AInteractable::AInteractable()
@@ -37,6 +35,13 @@ AInteractable::AInteractable()
 	InteractPrompt->SetupAttachment(ObjectMesh);
 	InteractPrompt->SetAutoActivate(false);
 
+	InteractCamSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
+	InteractCamSpringArm->SetupAttachment(BoxCollider);
+	InteractCamSpringArm->SetRelativeRotation(FRotator(0.0f, 0.0f, 180.0f));
+
+	InteractCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("InteractCamera"));
+	InteractCamera->SetupAttachment(InteractCamSpringArm);
+
 	CameraLockPosition = CreateDefaultSubobject<USceneComponent>(TEXT("CameraLockPosition"));
 	CameraLockPosition->SetupAttachment(BoxCollider);
 }
@@ -61,34 +66,20 @@ void AInteractable::SetInteractPromptVisibility(bool bIsVisible)
 	InteractPrompt->SetVisibility(bIsVisible);
 }
 
-void AInteractable::MovePlayerInFrontOfObject(UCameraComponent* PlayerCamera, AProjectLiminalCharacter* Player)
+void AInteractable::MovePlayerInFrontOfObject()
 {	
-	// Capture original position so it can return here
-	OriginalPlayerPosition = Player->GetActorLocation();
-
-	// Set player movement before disabling gravity
-	// Eliminates drift while looking at object
-	UCharacterMovementComponent* PlayerMovement = Player->GetComponentByClass<UCharacterMovementComponent>();
-	if (PlayerMovement)
-	{
-		PlayerMovement->Velocity = FVector::Zero();
-	}
-
-	// Disable gravity to prevent playing falling to ground, then move player in front of object
-	Player->GetCharacterMovement()->GravityScale = 0;
-	Player->SetActorLocation(CameraLockPosition->GetComponentLocation());
-	
-	// Rotate player camera to face object
-	APlayerController* Controller = UGameplayStatics::GetPlayerController(this, 0);	
-	if (Controller)
-	{
-		FRotator NewCameraRotation = UKismetMathLibrary::FindLookAtRotation(PlayerCamera->GetComponentLocation(), this->GetActorLocation());
-		Controller->SetControlRotation(NewCameraRotation);
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController)
+	{		
+		PlayerController->SetViewTargetWithBlend(this, 0.5f); // Blend duration can be adjusted
 	}
 }
 
-void AInteractable::ReturnPlayerToFloor(UCameraComponent* PlayerCamera, AProjectLiminalCharacter* Player)
+void AInteractable::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 {
-	Player->SetActorLocation(OriginalPlayerPosition);
-	Player->GetCharacterMovement()->GravityScale = 1;
+	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	if (PlayerController)
+	{
+		PlayerController->SetViewTargetWithBlend(Player, 0.5f); // Blend duration can be adjusted
+	}
 }

@@ -11,6 +11,7 @@ class UWidgetComponent;
 class UBoxComponent;
 class USceneComponent;
 class UCameraComponent;
+class USpringArmComponent;
 class AProjectLiminalCharacter;
 
 UCLASS()
@@ -38,6 +39,12 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USceneComponent* CameraLockPosition;
 
+	UPROPERTY(EditAnywhere)
+	UCameraComponent* InteractCamera;
+
+	UPROPERTY(EditAnywhere)
+	USpringArmComponent* InteractCamSpringArm;
+
 	// Tracks position player camera was in before it moved
 	FVector OriginalPlayerPosition = FVector::Zero();
 
@@ -47,7 +54,7 @@ public:
 
 	virtual void SetInteractPromptVisibility(bool bVisible);
 
-	virtual void MovePlayerInFrontOfObject(UCameraComponent* PlayerCamera, AProjectLiminalCharacter* Player);
+	virtual void MovePlayerInFrontOfObject();
 
-	virtual void ReturnPlayerToFloor(UCameraComponent* PlayerCamera, AProjectLiminalCharacter* Player);
+	virtual void ReturnPlayerToFloor(AProjectLiminalCharacter* Player);
 };
