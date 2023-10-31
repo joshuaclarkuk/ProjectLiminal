@@ -13,6 +13,8 @@ class USceneComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class AProjectLiminalCharacter;
+class UActorComponent;
+class UInteractableComponentBase;
 
 UCLASS()
 class PROJECTLIMINAL_API AInteractable : public AActor
@@ -45,8 +47,16 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* InteractCamSpringArm;
 
+	UPROPERTY(EditInstanceOnly)
+	TSubclassOf<UActorComponent> InteractableComponentBase = nullptr;
+	/*CAN'T FIGURE OUT HOW TO MAKE THESE WORK CURRENTLY*/
+	UInteractableComponentBase* AttachedInteractableComponent = nullptr;
+
+	UPROPERTY(EditAnywhere)
+	float CameraSnapSpeedInSeconds = 0.1f;
+
 	// Tracks position player camera was in before it moved
-	FVector OriginalPlayerPosition = FVector::Zero();
+	FVector OriginalPlayerPosition = FVector::Zero();	
 
 public:	
 	// Called every frame

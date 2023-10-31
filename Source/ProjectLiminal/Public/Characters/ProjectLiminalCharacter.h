@@ -19,7 +19,7 @@ class AInteractable;
 UENUM()
 enum EPlayerStates {
 	EPS_Unoccupied,
-	EPS_Occupied,
+	EPS_Interacting,
 	EPS_RelinquishControl
 };
 

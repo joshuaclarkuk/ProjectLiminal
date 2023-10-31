@@ -7,9 +7,11 @@
 #include "Components/SceneComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/TextRenderComponent.h"
+#include "Components/ActorComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Characters/ProjectLiminalCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Items/Interactable/InteractableComponentBase.h"
 
 // Sets default values
 AInteractable::AInteractable()
@@ -71,7 +73,12 @@ void AInteractable::MovePlayerInFrontOfObject()
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (PlayerController)
 	{		
-		PlayerController->SetViewTargetWithBlend(this, 0.5f); // Blend duration can be adjusted
+		PlayerController->SetViewTargetWithBlend(this, CameraSnapSpeedInSeconds); // Blend duration can be adjusted
+
+		if (AttachedInteractableComponent)
+		{
+			AttachedInteractableComponent->ToggleMouseCursor(true);
+		}
 	}
 }
 
@@ -80,6 +87,12 @@ void AInteractable::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (PlayerController)
 	{
-		PlayerController->SetViewTargetWithBlend(Player, 0.5f); // Blend duration can be adjusted
+		if (AttachedInteractableComponent)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("InteractableComponent Found"));
+			AttachedInteractableComponent->ToggleMouseCursor(false);
+		}
+
+		PlayerController->SetViewTargetWithBlend(Player, CameraSnapSpeedInSeconds); // Blend duration can be adjusted
 	}
 }
