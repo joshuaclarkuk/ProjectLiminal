@@ -9,17 +9,14 @@
 #include "EnhancedInputSubsystems.h"
 #include "Sound/SoundBase.h"
 #include "Engine/World.h"
-#include "Items/Interactable.h"
+#include "Items/InteractableBase.h"
 
 
 //////////////////////////////////////////////////////////////////////////
 // AProjectLiminalCharacter
 
 AProjectLiminalCharacter::AProjectLiminalCharacter()
-{
-	// Character doesnt have a rifle at start
-	bHasRifle = false;
-	
+{	
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(55.f, 96.0f);
 		
@@ -152,7 +149,7 @@ void AProjectLiminalCharacter::SweepForInteractable()
 
 		if (bHit)
 		{
-			CurrentInteractableObject = Cast<AInteractable>(HitResult.GetActor());
+			CurrentInteractableObject = Cast<AInteractableBase>(HitResult.GetActor());
 
 			if (CurrentInteractableObject)
 			{

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Items/Interactable.h"
+#include "Items/InteractableBase.h"
 #include "Components/WidgetComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"
@@ -11,10 +11,9 @@
 #include "Camera/CameraComponent.h"
 #include "Characters/ProjectLiminalCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
-#include "Items/Interactable/InteractableComponentBase.h"
 
 // Sets default values
-AInteractable::AInteractable()
+AInteractableBase::AInteractableBase()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -39,7 +38,7 @@ AInteractable::AInteractable()
 
 	InteractCamSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	InteractCamSpringArm->SetupAttachment(BoxCollider);
-	InteractCamSpringArm->SetRelativeRotation(FRotator(0.0f, 0.0f, 180.0f));
+	InteractCamSpringArm->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
 
 	InteractCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("InteractCamera"));
 	InteractCamera->SetupAttachment(InteractCamSpringArm);
@@ -49,7 +48,7 @@ AInteractable::AInteractable()
 }
 
 // Called when the game starts or when spawned
-void AInteractable::BeginPlay()
+void AInteractableBase::BeginPlay()
 {
 	Super::BeginPlay();
 	
@@ -57,42 +56,33 @@ void AInteractable::BeginPlay()
 }
 
 // Called every frame
-void AInteractable::Tick(float DeltaTime)
+void AInteractableBase::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
 }
 
-void AInteractable::SetInteractPromptVisibility(bool bIsVisible)
+void AInteractableBase::SetInteractPromptVisibility(bool bIsVisible)
 {
 	InteractPrompt->SetVisibility(bIsVisible);
 }
 
-void AInteractable::MovePlayerInFrontOfObject()
+void AInteractableBase::MovePlayerInFrontOfObject()
 {	
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (PlayerController)
 	{		
 		PlayerController->SetViewTargetWithBlend(this, CameraSnapSpeedInSeconds); // Blend duration can be adjusted
-
-		if (AttachedInteractableComponent)
-		{
-			AttachedInteractableComponent->ToggleMouseCursor(true);
-		}
+		PlayerController->SetShowMouseCursor(true);
 	}
 }
 
-void AInteractable::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
+void AInteractableBase::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 {
 	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
 	if (PlayerController)
 	{
-		if (AttachedInteractableComponent)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("InteractableComponent Found"));
-			AttachedInteractableComponent->ToggleMouseCursor(false);
-		}
-
+		PlayerController->SetShowMouseCursor(false);
 		PlayerController->SetViewTargetWithBlend(Player, CameraSnapSpeedInSeconds); // Blend duration can be adjusted
 	}
 }
