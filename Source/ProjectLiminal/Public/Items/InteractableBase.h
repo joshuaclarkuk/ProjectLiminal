@@ -13,8 +13,7 @@ class USceneComponent;
 class UCameraComponent;
 class USpringArmComponent;
 class AProjectLiminalCharacter;
-class UActorComponent;
-class UInteractableComponentBase;
+class AKeyboard;
 
 UCLASS()
 class PROJECTLIMINAL_API AInteractableBase : public AActor
