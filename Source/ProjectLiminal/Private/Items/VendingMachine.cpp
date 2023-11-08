@@ -8,17 +8,3 @@ AVendingMachine::AVendingMachine()
 
 }
 
-void AVendingMachine::SetInteractPromptVisibility(bool bVisible)
-{
-	Super::SetInteractPromptVisibility(bVisible);
-}
-
-void AVendingMachine::MovePlayerInFrontOfObject()
-{
-	Super::MovePlayerInFrontOfObject();
-}
-
-void AVendingMachine::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
-{
-	Super::ReturnPlayerToFloor(Player);
-}

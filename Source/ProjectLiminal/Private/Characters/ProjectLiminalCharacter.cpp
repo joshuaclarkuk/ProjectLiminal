@@ -81,7 +81,13 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::InteractWithObject);
 
 		// Clicking
-		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Click);
+		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Click);
+
+		// Pushing Interactable Buttons
+		EnhancedInputComponent->BindAction(PushLeftButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushLeftButton);
+		EnhancedInputComponent->BindAction(PushMiddleButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushMiddleButton);
+		EnhancedInputComponent->BindAction(PushRightButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushRightButton);
+
 	}
 }
 
@@ -129,6 +135,30 @@ void AProjectLiminalCharacter::Jump()
 void AProjectLiminalCharacter::Click()
 {
 
+}
+
+void AProjectLiminalCharacter::PushLeftButton()
+{
+	if (PlayerState == EPS_Interacting && CurrentInteractableObject)
+	{
+		CurrentInteractableObject->PlayButton(0);
+	}
+}
+
+void AProjectLiminalCharacter::PushMiddleButton()
+{
+	if (PlayerState == EPS_Interacting && CurrentInteractableObject)
+	{
+		CurrentInteractableObject->PlayButton(1);
+	}
+}
+
+void AProjectLiminalCharacter::PushRightButton()
+{
+	if (PlayerState == EPS_Interacting && CurrentInteractableObject)
+	{
+		CurrentInteractableObject->PlayButton(2);
+	}
 }
 
 void AProjectLiminalCharacter::PlayFootstepAudio()

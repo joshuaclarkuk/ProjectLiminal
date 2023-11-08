@@ -14,6 +14,8 @@ class UCameraComponent;
 class USpringArmComponent;
 class AProjectLiminalCharacter;
 class AKeyboard;
+class UCodeComponent;
+class APressableButton;
 
 UCLASS()
 class PROJECTLIMINAL_API AInteractableBase : public AActor
@@ -30,6 +32,8 @@ public:
 	virtual void SetInteractPromptVisibility(bool bVisible);
 	virtual void MovePlayerInFrontOfObject();
 	virtual void ReturnPlayerToFloor(AProjectLiminalCharacter* Player);
+
+	void PlayButton(int32 ButtonArrayValue);
 
 protected:
 	// Called when the game starts or when spawned
@@ -53,6 +57,13 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USpringArmComponent* InteractCamSpringArm;
 
+	UPROPERTY(VisibleAnywhere)
+	UCodeComponent* CodeComponent;
+
 	UPROPERTY(EditAnywhere)
 	float CameraSnapSpeedInSeconds = 0.1f;
+
+	UPROPERTY(VisibleAnywhere)
+	TArray<AActor*> ArrayOfAttachedButtons;
+	void ConstructPressableButtonArray();
 };

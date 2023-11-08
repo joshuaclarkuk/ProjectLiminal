@@ -17,10 +17,5 @@ class PROJECTLIMINAL_API AVendingMachine : public AInteractableBase
 public:
 	AVendingMachine();
 
-	virtual void SetInteractPromptVisibility(bool bVisible) override;
-	virtual void MovePlayerInFrontOfObject() override;
-	virtual void ReturnPlayerToFloor(AProjectLiminalCharacter* Player) override;
-
-protected:
 
 };
