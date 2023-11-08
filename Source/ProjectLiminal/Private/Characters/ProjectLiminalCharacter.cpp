@@ -58,7 +58,6 @@ void AProjectLiminalCharacter::BeginPlay()
 
 	// Start sweep for interactables
 	GetWorldTimerManager().SetTimer(SweepTimerHandle, this, &AProjectLiminalCharacter::SweepForInteractable, 0.1f, true);
-
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
@@ -80,6 +79,9 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 		// Interacting
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::InteractWithObject);
+
+		// Clicking
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Click);
 	}
 }
 
@@ -124,6 +126,11 @@ void AProjectLiminalCharacter::Jump()
 	}
 }
 
+void AProjectLiminalCharacter::Click()
+{
+
+}
+
 void AProjectLiminalCharacter::PlayFootstepAudio()
 {
 	FVector CharacterSpeed = AProjectLiminalCharacter::GetVelocity();
@@ -162,7 +169,6 @@ void AProjectLiminalCharacter::SweepForInteractable()
 			if (CurrentInteractableObject)
 			{
 				CurrentInteractableObject->SetInteractPromptVisibility(false);
-				UE_LOG(LogTemp, Warning, TEXT("Current Interactable Object is: NULL"));
 			}
 			CurrentInteractableObject = nullptr;
 		}
@@ -174,9 +180,7 @@ void AProjectLiminalCharacter::InteractWithObject()
 	if (CurrentInteractableObject && PlayerState == EPS_Unoccupied)
 	{
 		PlayerState = EPS_Interacting;
-		UE_LOG(LogTemp, Warning, TEXT("Interacting with: %s, PlayerState is: Occupied"), *CurrentInteractableObject->GetName());
 		CurrentInteractableObject->SetInteractPromptVisibility(false);
-		// Switch to interaction state
 		CurrentInteractableObject->MovePlayerInFrontOfObject();
 	}
 	else if (CurrentInteractableObject && PlayerState == EPS_Interacting)
@@ -184,6 +188,5 @@ void AProjectLiminalCharacter::InteractWithObject()
 		PlayerState = EPS_Unoccupied;
 		CurrentInteractableObject->SetInteractPromptVisibility(true);
 		CurrentInteractableObject->ReturnPlayerToFloor(this);
-		UE_LOG(LogTemp, Warning, TEXT("No longer interacting with: %s, PlayerState is: Unoccupied"), *CurrentInteractableObject->GetName());
 	}
 }

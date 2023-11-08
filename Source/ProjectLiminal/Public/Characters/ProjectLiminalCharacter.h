@@ -15,6 +15,7 @@ class UAnimMontage;
 class USoundBase;
 class UAudioComponent;
 class AInteractableBase;
+class AProjectLiminalPlayerController;
 
 UENUM()
 enum EPlayerStates {
@@ -32,7 +33,6 @@ class AProjectLiminalCharacter : public ACharacter
 	
 public:
 	AProjectLiminalCharacter();
-
 
 protected:
 	virtual void BeginPlay();	
@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* LookAction;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* ClickAction;
+
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleAnywhere, Category = Mesh)
 	USkeletalMeshComponent* Mesh1P;
@@ -73,27 +76,25 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Audio, meta = (AllowPrivateAccess = "true"))
 	USoundBase* FootstepMetaSound;
 
-	EPlayerStates PlayerState = EPlayerStates::EPS_Unoccupied;
-
-	FTimerHandle FootstepAudioTimerHandle;
-
-	FTimerHandle SweepTimerHandle;
-	AInteractableBase* CurrentInteractableObject;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
 	float MovementSpeedModifier = 1.0f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
 	float FootstepAudioInterval = 1.0f;
 
+	EPlayerStates PlayerState = EPlayerStates::EPS_Unoccupied;
+	AInteractableBase* CurrentInteractableObject;
+
+	FTimerHandle FootstepAudioTimerHandle;
+	FTimerHandle SweepTimerHandle;
+
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
 	void Jump();
+	void Click();
 
 	void PlayFootstepAudio();
-
 	void SweepForInteractable();
-
 	void InteractWithObject();
 
 public:
@@ -104,5 +105,7 @@ public:
 
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
+
+	EPlayerStates GetPlayerState() { return PlayerState; }
 };
 

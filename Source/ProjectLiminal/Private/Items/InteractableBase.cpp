@@ -11,6 +11,8 @@
 #include "Camera/CameraComponent.h"
 #include "Characters/ProjectLiminalCharacter.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "Config/ProjectLiminalPlayerController.h"
+#include "Blueprint/WidgetLayoutLibrary.h"
 
 // Sets default values
 AInteractableBase::AInteractableBase()
@@ -69,20 +71,18 @@ void AInteractableBase::SetInteractPromptVisibility(bool bIsVisible)
 
 void AInteractableBase::MovePlayerInFrontOfObject()
 {	
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	AProjectLiminalPlayerController* PlayerController = Cast<AProjectLiminalPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{		
-		PlayerController->SetViewTargetWithBlend(this, CameraSnapSpeedInSeconds); // Blend duration can be adjusted
-		PlayerController->SetShowMouseCursor(true);
+		PlayerController->ZoomOnObjectAndEnableMouse(this, CameraSnapSpeedInSeconds);
 	}
 }
 
 void AInteractableBase::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 {
-	APlayerController* PlayerController = GetWorld()->GetFirstPlayerController();
+	AProjectLiminalPlayerController* PlayerController = Cast<AProjectLiminalPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{
-		PlayerController->SetShowMouseCursor(false);
-		PlayerController->SetViewTargetWithBlend(Player, CameraSnapSpeedInSeconds); // Blend duration can be adjusted
+		PlayerController->ZoomBackOutAndDisableMouse(Player, CameraSnapSpeedInSeconds);
 	}
 }
