@@ -43,7 +43,7 @@ protected:
 	AInteractableBase* InteractableObject;
 
 	UPROPERTY(EditAnywhere)
-	float ButtonPushDuration = 0.1f;
+	float ButtonPushDuration = 0.2f;
 
 	UCodeComponent* CodeComponent;
 	FTimerHandle ButtonPushHandle;
@@ -54,4 +54,5 @@ protected:
 	FVector ButtonStartPosition;
 	FRotator ButtonStartRotation;
 	FVector ButtonDepressedPosition;
+	float ButtonPushInterpSpeed = 20.0f;
 };

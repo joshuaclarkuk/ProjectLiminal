@@ -45,13 +45,24 @@ void APressableButton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (bIsDepressed)
+	{
+		DepressButton();
+	}
+	else
+	{
+		FVector NewLocation = FMath::VInterpTo(GetActorLocation(), ButtonStartPosition, GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
+		FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), ButtonStartRotation, GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
+		SetActorLocation(NewLocation);
+		SetActorRotation(NewRotation);
+	}
 }
 
 void APressableButton::TriggerButton(int32 ButtonArrayValue)
 {
 	if (CodeComponent)
 	{
-		DepressButton();
+		bIsDepressed = true;
 		GetWorldTimerManager().SetTimer(ButtonPushHandle, this, &APressableButton::ReturnButtonToOriginalPosition, ButtonPushDuration, false);
 		CodeComponent->EnterDigitToCode(ButtonArrayValue);
 		UGameplayStatics::PlaySoundAtLocation(this, SoundEffect, GetActorLocation());
@@ -61,13 +72,14 @@ void APressableButton::TriggerButton(int32 ButtonArrayValue)
 
 void APressableButton::DepressButton()
 {
-	SetActorLocation(ButtonStartPosition + FVector(0.0f, 0.0f, -10.0f));
-	SetActorRotation(ButtonStartRotation + FRotator(-10.0f, 0.0f, 0.0f));
+	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), ButtonStartPosition + FVector(0.0f, 0.0f, -2.0f), GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
+	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), ButtonStartRotation + FRotator(-10.0f, 0.0f, 0.0f), GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
+	SetActorLocation(NewLocation);
+	SetActorRotation(NewRotation);
 }
 
 void APressableButton::ReturnButtonToOriginalPosition()
 {
-	SetActorLocation(ButtonStartPosition);
-	SetActorRotation(ButtonStartRotation);
+	bIsDepressed = false;
 }
 
