@@ -10,6 +10,7 @@ class UBoxComponent;
 class UStaticMeshComponent;
 class AInteractableBase;
 class UCodeComponent;
+class USoundBase;
 
 UCLASS()
 class PROJECTLIMINAL_API APressableButton : public AActor
@@ -35,8 +36,22 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ButtonMeshComponent;
 
+	UPROPERTY(EditAnywhere)
+	USoundBase* SoundEffect;
+
 	UPROPERTY(EditInstanceOnly, Category = "References")
 	AInteractableBase* InteractableObject;
 
+	UPROPERTY(EditAnywhere)
+	float ButtonPushDuration = 0.1f;
+
 	UCodeComponent* CodeComponent;
+	FTimerHandle ButtonPushHandle;
+
+	void DepressButton();
+	void ReturnButtonToOriginalPosition();
+	bool bIsDepressed = false;
+	FVector ButtonStartPosition;
+	FRotator ButtonStartRotation;
+	FVector ButtonDepressedPosition;
 };
