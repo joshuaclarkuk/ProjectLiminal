@@ -42,15 +42,13 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category = "References")
 	AInteractableBase* InteractableObject;
 
-	UPROPERTY(EditAnywhere)
-	float ButtonPushDuration = 0.2f;
-
 	UCodeComponent* CodeComponent;
 	FTimerHandle ButtonPushHandle;
 
 	void DepressButton();
 	void ReturnButtonToOriginalPosition();
-	bool bIsDepressed = false;
+	bool bIsBeingDepressed = false;
+	bool bIsRising = false;
 	FVector ButtonStartPosition;
 	FRotator ButtonStartRotation;
 	FVector ButtonDepressedPosition;

@@ -18,7 +18,7 @@ void UCodeComponent::EnterDigitToCode(int32 i)
 	EnteredCode.Add(i);
 	for (int32 i = 0; i < EnteredCode.Num(); ++i)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Element %d: %d"), i, EnteredCode[i]);
+		// UE_LOG(LogTemp, Warning, TEXT("Element %d: %d"), i, EnteredCode[i]);
 	}
 }
 
