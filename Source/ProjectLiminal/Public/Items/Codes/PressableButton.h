@@ -45,12 +45,13 @@ protected:
 	UCodeComponent* CodeComponent;
 	FTimerHandle ButtonPushHandle;
 
-	void DepressButton();
-	void ReturnButtonToOriginalPosition();
 	bool bIsBeingDepressed = false;
 	bool bIsRising = false;
 	FVector ButtonStartPosition;
 	FRotator ButtonStartRotation;
 	FVector ButtonDepressedPosition;
 	float ButtonPushInterpSpeed = 20.0f;
+
+	void DepressButton(float DeltaTime);
+	void ReturnButtonToOriginalPosition(float DeltaTime);
 };

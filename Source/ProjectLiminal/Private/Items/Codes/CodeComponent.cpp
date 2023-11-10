@@ -2,6 +2,8 @@
 
 
 #include "Items/Codes/CodeComponent.h"
+#include "Components/PointLightComponent.h"
+
 
 // Sets default values for this component's properties
 UCodeComponent::UCodeComponent()
@@ -13,17 +15,48 @@ UCodeComponent::UCodeComponent()
 	// ...
 }
 
+void UCodeComponent::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CodeIndicatorLight = GetOwner()->FindComponentByClass<UPointLightComponent>();
+}
+
 void UCodeComponent::EnterDigitToCode(int32 i)
 {
+	if (bIsUnlocked) { return; }
+
 	EnteredCode.Add(i);
-	for (int32 i = 0; i < EnteredCode.Num(); ++i)
-	{
-		// UE_LOG(LogTemp, Warning, TEXT("Element %d: %d"), i, EnteredCode[i]);
-	}
+	CheckEnteredCode();
 }
 
 void UCodeComponent::CheckEnteredCode()
 {
+	// Need to check digit by digit as they are entered, as I'm using sounds rather than numerical codes
+	for (int32 i = 0; i < EnteredCode.Num(); ++i)
+	{
+		if (EnteredCode[i] == CodeToOpen[i])
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Correct number entered"));
+			UE_LOG(LogTemp, Warning, TEXT("Element %d: %d"), i, EnteredCode[i]);
 
+			if (i == CodeToOpen.Num() - 1)
+			{
+				bIsUnlocked = true;
+				UE_LOG(LogTemp, Warning, TEXT("Correct code entered! Unlocked"));
+
+				if (CodeIndicatorLight)
+				{
+					CodeIndicatorLight->SetLightColor(FLinearColor::Green);
+				}
+			}
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Incorrect number entered. Clearing"));
+			EnteredCode.Empty();
+			return;
+		}
+	}
 }
 

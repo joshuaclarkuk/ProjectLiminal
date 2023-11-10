@@ -47,11 +47,11 @@ void APressableButton::Tick(float DeltaTime)
 
 	if (bIsBeingDepressed)
 	{
-		DepressButton();
+		DepressButton(DeltaTime);
 	}
 	else if (bIsRising)
 	{
-		ReturnButtonToOriginalPosition();
+		ReturnButtonToOriginalPosition(DeltaTime);
 	}
 }
 
@@ -61,17 +61,20 @@ void APressableButton::TriggerButton(int32 ButtonArrayValue)
 	{
 		bIsBeingDepressed = true;
 		CodeComponent->EnterDigitToCode(ButtonArrayValue);
-		UGameplayStatics::PlaySoundAtLocation(this, SoundEffect, GetActorLocation());
+		if (SoundEffect)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, SoundEffect, GetActorLocation());
+		}
 	}
 }
 
-void APressableButton::DepressButton()
+void APressableButton::DepressButton(float DeltaTime)
 {
 	FVector TargetLocation = ButtonStartPosition + FVector(0.0f, 0.0f, -2.0f);
 	FRotator TargetRotation = ButtonStartRotation + FRotator(-10.0f, 0.0f, 0.0f);
 
-	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), TargetLocation, GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
-	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
+	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), TargetLocation, DeltaTime, ButtonPushInterpSpeed);
+	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), TargetRotation, DeltaTime, ButtonPushInterpSpeed);
 	SetActorLocation(NewLocation);
 	SetActorRotation(NewRotation);
 	
@@ -79,22 +82,19 @@ void APressableButton::DepressButton()
 	if (NewLocation.Equals(TargetLocation, 0.01f) && NewRotation.Equals(TargetRotation, 0.1f))
 	{
 		bIsBeingDepressed = false;
-		UE_LOG(LogTemp, Warning, TEXT("Depressing finished, rising started"))
 		bIsRising = true;
 	}
 }
 
-void APressableButton::ReturnButtonToOriginalPosition()
+void APressableButton::ReturnButtonToOriginalPosition(float DeltaTime)
 {
-	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), ButtonStartPosition, GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
-	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), ButtonStartRotation, GetWorld()->GetDeltaSeconds(), ButtonPushInterpSpeed);
+	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), ButtonStartPosition, DeltaTime, ButtonPushInterpSpeed);
+	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), ButtonStartRotation, DeltaTime, ButtonPushInterpSpeed);
 	SetActorLocation(NewLocation);
 	SetActorRotation(NewRotation);
 
 	if (NewLocation.Equals(ButtonStartPosition, 0.01f) && NewRotation.Equals(ButtonStartRotation, 0.1f))
 	{
 		bIsRising = false;
-		UE_LOG(LogTemp, Warning, TEXT("Rising finished"))
 	}
 }
-

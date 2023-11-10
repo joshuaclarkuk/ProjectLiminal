@@ -15,7 +15,7 @@
 #include "Blueprint/WidgetLayoutLibrary.h"
 #include "Items/Codes/CodeComponent.h"
 #include "Items/Codes/PressableButton.h"
-#include "Algo/Reverse.h"
+#include "Components/PointLightComponent.h"
 
 // Sets default values
 AInteractableBase::AInteractableBase()
@@ -52,6 +52,12 @@ AInteractableBase::AInteractableBase()
 	CameraLockPosition->SetupAttachment(BoxCollider);
 
 	CodeComponent = CreateDefaultSubobject<UCodeComponent>(TEXT("CodeComponent"));
+
+	CodeIndicatorLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("CodeIndicatorComponent"));
+	CodeIndicatorLight->SetupAttachment(ObjectMesh);
+	CodeIndicatorLight->SetLightColor(FLinearColor::Red);
+	CodeIndicatorLight->SetAttenuationRadius(3.0f);
+	CodeIndicatorLight->SetIntensity(5000.0f);
 }
 
 // Called when the game starts or when spawned

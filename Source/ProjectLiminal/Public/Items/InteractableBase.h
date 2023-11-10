@@ -16,6 +16,7 @@ class AProjectLiminalCharacter;
 class AKeyboard;
 class UCodeComponent;
 class APressableButton;
+class UPointLightComponent;
 
 UCLASS()
 class PROJECTLIMINAL_API AInteractableBase : public AActor
@@ -59,6 +60,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UCodeComponent* CodeComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UPointLightComponent* CodeIndicatorLight;
 
 	UPROPERTY(EditAnywhere)
 	float CameraSnapSpeedInSeconds = 0.1f;
