@@ -34,7 +34,7 @@ public:
 	virtual void MovePlayerInFrontOfObject();
 	virtual void ReturnPlayerToFloor(AProjectLiminalCharacter* Player);
 
-	void PlayButton(int32 ButtonArrayValue);
+	void PressButton(int32 ButtonArrayValue);
 
 protected:
 	// Called when the game starts or when spawned
@@ -70,4 +70,5 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> ArrayOfAttachedButtons;
 	void ConstructPressableButtonArray();
+
 };

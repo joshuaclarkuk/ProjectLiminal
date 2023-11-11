@@ -141,7 +141,7 @@ void AProjectLiminalCharacter::PushLeftButton()
 {
 	if (PlayerState == EPS_Interacting && CurrentInteractableObject)
 	{
-		CurrentInteractableObject->PlayButton(0);
+		CurrentInteractableObject->PressButton(0);
 	}
 }
 
@@ -149,7 +149,7 @@ void AProjectLiminalCharacter::PushMiddleButton()
 {
 	if (PlayerState == EPS_Interacting && CurrentInteractableObject)
 	{
-		CurrentInteractableObject->PlayButton(1);
+		CurrentInteractableObject->PressButton(1);
 	}
 }
 
@@ -157,7 +157,7 @@ void AProjectLiminalCharacter::PushRightButton()
 {
 	if (PlayerState == EPS_Interacting && CurrentInteractableObject)
 	{
-		CurrentInteractableObject->PlayButton(2);
+		CurrentInteractableObject->PressButton(2);
 	}
 }
 

@@ -39,6 +39,8 @@ AInteractableBase::AInteractableBase()
 
 	InteractPrompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractPrompt"));
 	InteractPrompt->SetupAttachment(ObjectMesh);
+	InteractPrompt->SetWorldScale3D(FVector(0.25f, 0.25f, 0.25f));
+	InteractPrompt->SetDrawSize(FVector2D(2500.0f, 500.0f));
 	InteractPrompt->SetAutoActivate(false);
 
 	InteractCamSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
@@ -106,7 +108,7 @@ void AInteractableBase::ConstructPressableButtonArray()
 	GetAttachedActors(ArrayOfAttachedButtons);
 }
 
-void AInteractableBase::PlayButton(int32 ButtonArrayValue)
+void AInteractableBase::PressButton(int32 ButtonArrayValue)
 {
 	if (ArrayOfAttachedButtons[ButtonArrayValue])
 	{
