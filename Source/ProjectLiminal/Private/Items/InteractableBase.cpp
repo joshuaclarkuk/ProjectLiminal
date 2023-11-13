@@ -41,11 +41,13 @@ AInteractableBase::AInteractableBase()
 	InteractPrompt->SetupAttachment(ObjectMesh);
 	InteractPrompt->SetWorldScale3D(FVector(0.25f, 0.25f, 0.25f));
 	InteractPrompt->SetDrawSize(FVector2D(2500.0f, 500.0f));
+	InteractPrompt->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	InteractPrompt->SetAutoActivate(false);
 
 	InteractCamSpringArm = CreateDefaultSubobject<USpringArmComponent>(TEXT("SpringArm"));
 	InteractCamSpringArm->SetupAttachment(BoxCollider);
 	InteractCamSpringArm->SetRelativeRotation(FRotator(0.0f, 180.0f, 0.0f));
+	InteractCamSpringArm->bDoCollisionTest = false;
 
 	InteractCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("InteractCamera"));
 	InteractCamera->SetupAttachment(InteractCamSpringArm);

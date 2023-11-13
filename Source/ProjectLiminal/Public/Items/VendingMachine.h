@@ -17,5 +17,6 @@ class PROJECTLIMINAL_API AVendingMachine : public AInteractableBase
 public:
 	AVendingMachine();
 
-
+protected:
+	virtual void MovePlayerInFrontOfObject() override;
 };

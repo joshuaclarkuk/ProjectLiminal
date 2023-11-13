@@ -7,6 +7,14 @@
 #include "PeepHole.generated.h"
 
 class UPointLightComponent;
+class UCameraComponent;
+class AProjectLiminalPlayerController;
+
+UENUM()
+enum EPeepHoleState {
+	EPS_NotActive,
+	EPS_Active
+};
 
 /**
  * 
@@ -18,10 +26,12 @@ class PROJECTLIMINAL_API APeepHole : public AInteractableBase
 
 public:
 	APeepHole();
+	virtual void Tick(float DeltaTime) override;
 
 protected:
 	virtual void BeginPlay() override;
 	virtual void MovePlayerInFrontOfObject() override;
+	virtual void ReturnPlayerToFloor(AProjectLiminalCharacter* Player) override;
 
 	UPROPERTY(EditAnywhere)
 	UPointLightComponent* Torchlight;
@@ -30,8 +40,15 @@ protected:
 	float TorchlightIntensity = 100.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
-	float TorchlightAttenuationRadius = 60.0f;
+	float TorchlightAttenuationRadius = 100.0f;
+
+	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
+	float TorchlightTraceDistance = 200.0f;
 
 	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
 	bool bTorchlightIsNeeded = false;
+
+	EPeepHoleState PeepHoleState = EPeepHoleState::EPS_NotActive;
+	AProjectLiminalPlayerController* PlayerControllerRef;
+	UCameraComponent* CameraComponent;
 };

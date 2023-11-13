@@ -30,7 +30,7 @@ protected:
 	bool bShouldRotate = false;
 
 	UPROPERTY(EditAnywhere, Category = "Movement Settings")
-	float InterpSpeed = 2.0f;
+	float InterpSpeed = 3.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Movement Settings")
 	FVector TargetLocation = FVector::ZeroVector;
