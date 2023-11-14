@@ -23,6 +23,7 @@ void UCodeComponent::BeginPlay()
 	// Set correct indicator light
 	CodeIndicatorLight = GetOwner()->FindComponentByClass<UPointLightComponent>();
 
+	// Initialise arrays and grab Door Movers from relevant doors (remember to drag reference into Details panel)
 	DoorMovementComponents.SetNum(DoorActorReferences.Num());
 	for (int i = 0; i < DoorActorReferences.Num(); i++)
 	{
