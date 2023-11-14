@@ -7,6 +7,7 @@
 #include "CodeComponent.generated.h"
 
 class UPointLightComponent;
+class UMoveWithInterpComponent;
 
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -18,6 +19,11 @@ public:
 	// Sets default values for this component's properties
 	UCodeComponent();
 
+	void EnterDigitToCode(int32 i);
+
+protected:
+	virtual void BeginPlay() override;
+
 	// Array to store the entered code
 	UPROPERTY(EditInstanceOnly)
 	TArray<int32> CodeToOpen{ 0,1,2 };
@@ -26,10 +32,11 @@ public:
 	UPROPERTY(VisibleInstanceOnly)
 	TArray<int32> EnteredCode;
 
-	void EnterDigitToCode(int32 i);
+	UPROPERTY(EditInstanceOnly)
+	TArray<AActor*> DoorActorReferences;
 
-protected:
-	virtual void BeginPlay() override;
+	UPROPERTY(VisibleAnywhere)
+	TArray<UMoveWithInterpComponent*> DoorMovementComponents;
 
 	UPointLightComponent* CodeIndicatorLight;
 

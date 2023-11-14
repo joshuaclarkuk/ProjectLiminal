@@ -33,6 +33,8 @@ void APressableButton::BeginPlay()
 	// Set up button push mechanics
 	ButtonStartPosition = GetActorLocation();
 	ButtonStartRotation = GetActorRotation();
+
+	InteractableObject = Cast<AInteractableBase>(GetAttachParentActor());
 	
 	if (InteractableObject)
 	{

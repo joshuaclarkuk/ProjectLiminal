@@ -41,7 +41,7 @@ void UMoveWithInterpComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	{
 		MoveToNewLocation(TargetLocation, DeltaTime);
 	}
-	else
+	else if (bShouldMoveBack)
 	{
 		MoveToNewLocation(StartLocation, DeltaTime);
 	}
@@ -50,30 +50,36 @@ void UMoveWithInterpComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	{
 		MoveToNewRotation(TargetRotation, DeltaTime);
 	}
-	else
+	else if (bShouldRotateBack)
 	{
 		MoveToNewRotation(StartRotation, DeltaTime);
 	}
 }
 
-void UMoveWithInterpComponent::MoveToNewLocation(FVector SetLocation, float DeltaTime)
+void UMoveWithInterpComponent::MoveToNewLocation(FVector MoveTo, float DeltaTime)
 {
 	AActor* OwningActor = GetOwner();
 	if (OwningActor)
 	{
 		FVector CurrentLocation = OwningActor->GetActorLocation();
-		FVector NewLocation = FMath::VInterpTo(CurrentLocation, SetLocation, DeltaTime, InterpSpeed);
+		FVector NewLocation = FMath::VInterpTo(CurrentLocation, MoveTo, DeltaTime, InterpSpeed);
 		OwningActor->SetActorRelativeLocation(NewLocation);
+
+		//if (NewLocation.Equals(MoveTo, 0.5f))
+		//{
+		//	bShouldMove = false;
+		//	bShouldMoveBack = false;
+		//}
 	}
 }
 
-void UMoveWithInterpComponent::MoveToNewRotation(FRotator SetRotation, float DeltaTime)
+void UMoveWithInterpComponent::MoveToNewRotation(FRotator RotateTo, float DeltaTime)
 {
 	AActor* OwningActor = GetOwner();
 	if (OwningActor)
 	{
 		FRotator CurrentRotation = OwningActor->GetActorRotation();
-		FRotator NewRotation = FMath::RInterpTo(CurrentRotation, SetRotation, DeltaTime, InterpSpeed);
+		FRotator NewRotation = FMath::RInterpTo(CurrentRotation, RotateTo, DeltaTime, InterpSpeed);
 		OwningActor->SetActorRelativeRotation(NewRotation);
 	}
 }

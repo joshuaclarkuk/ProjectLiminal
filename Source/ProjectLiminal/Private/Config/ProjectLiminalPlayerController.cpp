@@ -5,10 +5,10 @@
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Characters/ProjectLiminalCharacter.h"
 
-void AProjectLiminalPlayerController::ZoomOnObjectAndEnableMouse(AActor* ObjectOfFocus, float CameraSnapSpeedInSeconds)
+void AProjectLiminalPlayerController::ZoomOnObjectAndEnableMouse(AActor* ObjectOfFocus, float CameraSnapSpeedInSeconds, bool bEnableMouse)
 {
 	SetViewTargetWithBlend(ObjectOfFocus, CameraSnapSpeedInSeconds); // Blend duration can be adjusted
-	SetShowMouseCursor(true);
+	SetShowMouseCursor(bEnableMouse);
 	bEnableClickEvents = true;
 	UE_LOG(LogTemp, Warning, TEXT("The value of bEnableClickEvents is: %s"), bEnableClickEvents ? TEXT("true") : TEXT("false"));
 }

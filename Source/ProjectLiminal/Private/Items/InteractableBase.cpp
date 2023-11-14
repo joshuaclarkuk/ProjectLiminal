@@ -40,7 +40,7 @@ AInteractableBase::AInteractableBase()
 	InteractPrompt = CreateDefaultSubobject<UWidgetComponent>(TEXT("InteractPrompt"));
 	InteractPrompt->SetupAttachment(ObjectMesh);
 	InteractPrompt->SetWorldScale3D(FVector(0.25f, 0.25f, 0.25f));
-	InteractPrompt->SetDrawSize(FVector2D(2500.0f, 500.0f));
+	InteractPrompt->SetDrawSize(FVector2D(1280.0f, 256.0f));
 	InteractPrompt->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	InteractPrompt->SetAutoActivate(false);
 
@@ -91,7 +91,7 @@ void AInteractableBase::MovePlayerInFrontOfObject()
 	AProjectLiminalPlayerController* PlayerController = Cast<AProjectLiminalPlayerController>(GetWorld()->GetFirstPlayerController());
 	if (PlayerController)
 	{		
-		PlayerController->ZoomOnObjectAndEnableMouse(this, CameraSnapSpeedInSeconds);
+		PlayerController->ZoomOnObjectAndEnableMouse(this, CameraSnapSpeedInSeconds, false);
 	}
 }
 

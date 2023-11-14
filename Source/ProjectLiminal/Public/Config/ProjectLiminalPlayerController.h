@@ -17,7 +17,7 @@ class PROJECTLIMINAL_API AProjectLiminalPlayerController : public APlayerControl
 	GENERATED_BODY()
 
 public:
-	void ZoomOnObjectAndEnableMouse(AActor* ObjectOfFocus, float CameraSnapSpeedInSeconds);
+	void ZoomOnObjectAndEnableMouse(AActor* ObjectOfFocus, float CameraSnapSpeedInSeconds, bool bEnableMouse);
 	void ZoomBackOutAndDisableMouse(AProjectLiminalCharacter* PlayerCharacter, float CameraSnapSpeedInSeconds);
 
 protected:

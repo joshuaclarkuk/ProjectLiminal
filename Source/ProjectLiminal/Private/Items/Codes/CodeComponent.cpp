@@ -3,6 +3,7 @@
 
 #include "Items/Codes/CodeComponent.h"
 #include "Components/PointLightComponent.h"
+#include "Components/MoveWithInterpComponent.h"
 
 
 // Sets default values for this component's properties
@@ -19,7 +20,17 @@ void UCodeComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	// Set correct indicator light
 	CodeIndicatorLight = GetOwner()->FindComponentByClass<UPointLightComponent>();
+
+	DoorMovementComponents.SetNum(DoorActorReferences.Num());
+	for (int i = 0; i < DoorActorReferences.Num(); i++)
+	{
+		if (DoorActorReferences[i])
+		{
+			DoorMovementComponents[i] = DoorActorReferences[i]->FindComponentByClass<UMoveWithInterpComponent>();
+		}
+	}
 }
 
 void UCodeComponent::EnterDigitToCode(int32 i)
@@ -33,21 +44,26 @@ void UCodeComponent::EnterDigitToCode(int32 i)
 void UCodeComponent::CheckEnteredCode()
 {
 	// Need to check digit by digit as they are entered, as I'm using sounds rather than numerical codes
-	for (int32 i = 0; i < EnteredCode.Num(); ++i)
+	for (int32 i = 0; i < EnteredCode.Num(); i++)
 	{
 		if (EnteredCode[i] == CodeToOpen[i])
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Correct number entered"));
 			UE_LOG(LogTemp, Warning, TEXT("Element %d: %d"), i, EnteredCode[i]);
 
+			// Code executes on correct code entry
 			if (i == CodeToOpen.Num() - 1)
 			{
+				// Bool protects against multiple unlocks
 				bIsUnlocked = true;
 				UE_LOG(LogTemp, Warning, TEXT("Correct code entered! Unlocked"));
-
-				if (CodeIndicatorLight)
+				CodeIndicatorLight->SetLightColor(FLinearColor::Green);
+				for (int j = 0; j < DoorMovementComponents.Num(); j++)
 				{
-					CodeIndicatorLight->SetLightColor(FLinearColor::Green);
+					if (DoorMovementComponents[j])
+					{
+						DoorMovementComponents[j]->SetShouldRotate(true);
+					}
 				}
 			}
 		}

@@ -12,12 +12,13 @@ class PROJECTLIMINAL_API UMoveWithInterpComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UMoveWithInterpComponent();
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 
 protected:
 	// Called when the game starts
@@ -27,7 +28,13 @@ protected:
 	bool bShouldMove = false;
 
 	UPROPERTY(EditAnywhere, Category = "Movement Settings")
+	bool bShouldMoveBack = false;
+
+	UPROPERTY(EditAnywhere, Category = "Movement Settings")
 	bool bShouldRotate = false;
+
+	UPROPERTY(EditAnywhere, Category = "Movement Settings")
+	bool bShouldRotateBack = false;
 
 	UPROPERTY(EditAnywhere, Category = "Movement Settings")
 	float InterpSpeed = 3.0f;
@@ -40,6 +47,13 @@ protected:
 	FRotator TargetRotation = FRotator::ZeroRotator;
 	FRotator StartRotation = FRotator::ZeroRotator;
 
-	void MoveToNewLocation(FVector TargetLocation, float DeltaTime);
-	void MoveToNewRotation(FRotator TargetRotation, float DeltaTime);
+	void MoveToNewLocation(FVector MoveTo, float DeltaTime);
+	void MoveToNewRotation(FRotator RotateTo, float DeltaTime);
+
+	/*GETTERS & SETTERS*/
+public:
+	void SetShouldMove(bool ShouldMove) { bShouldMove = ShouldMove; }
+	void SetShouldMoveBack(bool ShouldMoveBack) { bShouldMoveBack = ShouldMoveBack; }
+	void SetShouldRotate(bool ShouldRotate) { bShouldRotate = ShouldRotate; }
+	void SetShouldRotateBack(bool ShouldRotateBack) { bShouldRotateBack = ShouldRotateBack; }
 };

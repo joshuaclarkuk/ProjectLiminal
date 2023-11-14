@@ -39,7 +39,7 @@ protected:
 	UPROPERTY(EditAnywhere)
 	USoundBase* SoundEffect;
 
-	UPROPERTY(EditInstanceOnly, Category = "References")
+	UPROPERTY(VisibleAnywhere, Category = "References")
 	AInteractableBase* InteractableObject;
 
 	UCodeComponent* CodeComponent;
