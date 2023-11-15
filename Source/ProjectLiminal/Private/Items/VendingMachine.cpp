@@ -3,22 +3,44 @@
 
 #include "Items/VendingMachine.h"
 #include "Config/ProjectLiminalPlayerController.h"
+#include "Items/Codes/CodeComponent.h"
+#include "Items/Codes/PressableButton.h"
+#include "Components/PointLightComponent.h"
 
 
 AVendingMachine::AVendingMachine()
 {
+	CodeComponent = CreateDefaultSubobject<UCodeComponent>(TEXT("CodeComponent"));
 
+	CodeIndicatorLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("CodeIndicatorComponent"));
+	CodeIndicatorLight->SetupAttachment(ObjectMesh);
+	CodeIndicatorLight->SetLightColor(FLinearColor::Red);
+	CodeIndicatorLight->SetAttenuationRadius(3.0f);
+	CodeIndicatorLight->SetIntensity(5000.0f);
 }
 
-// Overriding this method from InteractableBase, as Vending Machine doesn't actually require mouse.
-void AVendingMachine::MovePlayerInFrontOfObject()
+void AVendingMachine::BeginPlay()
 {
-	Super::MovePlayerInFrontOfObject();
+	Super::BeginPlay();
 
-	AProjectLiminalPlayerController* PlayerController = Cast<AProjectLiminalPlayerController>(GetWorld()->GetFirstPlayerController());
-	if (PlayerController)
+	ConstructPressableButtonArray();
+}
+
+void AVendingMachine::ConstructPressableButtonArray()
+{
+	// Get the array of child actors attached to this actor
+	GetAttachedActors(ArrayOfAttachedButtons);
+}
+
+void AVendingMachine::PressButton(int32 ButtonArrayValue)
+{
+	if (ArrayOfAttachedButtons[ButtonArrayValue])
 	{
-		PlayerController->SetShowMouseCursor(false);
+		APressableButton* PressableButton = CastChecked<APressableButton>(ArrayOfAttachedButtons[ButtonArrayValue]);
+		if (PressableButton)
+		{
+			PressableButton->TriggerButton(ButtonArrayValue);
+		}
 	}
 }
 

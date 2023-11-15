@@ -13,9 +13,7 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Config/ProjectLiminalPlayerController.h"
 #include "Blueprint/WidgetLayoutLibrary.h"
-#include "Items/Codes/CodeComponent.h"
-#include "Items/Codes/PressableButton.h"
-#include "Components/PointLightComponent.h"
+
 
 // Sets default values
 AInteractableBase::AInteractableBase()
@@ -54,14 +52,6 @@ AInteractableBase::AInteractableBase()
 
 	CameraLockPosition = CreateDefaultSubobject<USceneComponent>(TEXT("CameraLockPosition"));
 	CameraLockPosition->SetupAttachment(BoxCollider);
-
-	CodeComponent = CreateDefaultSubobject<UCodeComponent>(TEXT("CodeComponent"));
-
-	CodeIndicatorLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("CodeIndicatorComponent"));
-	CodeIndicatorLight->SetupAttachment(ObjectMesh);
-	CodeIndicatorLight->SetLightColor(FLinearColor::Red);
-	CodeIndicatorLight->SetAttenuationRadius(3.0f);
-	CodeIndicatorLight->SetIntensity(5000.0f);
 }
 
 // Called when the game starts or when spawned
@@ -70,15 +60,6 @@ void AInteractableBase::BeginPlay()
 	Super::BeginPlay();
 	
 	InteractPrompt->SetVisibility(false);
-
-	ConstructPressableButtonArray();
-}
-
-// Called every frame
-void AInteractableBase::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-
 }
 
 void AInteractableBase::SetInteractPromptVisibility(bool bIsVisible)
@@ -101,23 +82,5 @@ void AInteractableBase::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 	if (PlayerController)
 	{
 		PlayerController->ZoomBackOutAndDisableMouse(Player, CameraSnapSpeedInSeconds);
-	}
-}
-
-void AInteractableBase::ConstructPressableButtonArray()
-{
-	// Get the array of child actors attached to this actor
-	GetAttachedActors(ArrayOfAttachedButtons);
-}
-
-void AInteractableBase::PressButton(int32 ButtonArrayValue)
-{
-	if (ArrayOfAttachedButtons[ButtonArrayValue])
-	{
-		APressableButton* PressableButton = CastChecked<APressableButton>(ArrayOfAttachedButtons[ButtonArrayValue]);
-		if (PressableButton)
-		{
-			PressableButton->TriggerButton(ButtonArrayValue);
-		}
 	}
 }

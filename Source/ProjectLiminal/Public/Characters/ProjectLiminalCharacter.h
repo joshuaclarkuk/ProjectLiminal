@@ -16,6 +16,7 @@ class USoundBase;
 class UAudioComponent;
 class AInteractableBase;
 class AProjectLiminalPlayerController;
+class AVendingMachine;
 
 UENUM()
 enum EPlayerStates {
@@ -93,6 +94,7 @@ protected:
 
 	EPlayerStates PlayerState = EPlayerStates::EPS_Unoccupied;
 	AInteractableBase* CurrentInteractableObject;
+	AVendingMachine* InteractableObjectIsVendingMachine;
 
 	FTimerHandle FootstepAudioTimerHandle;
 	FTimerHandle SweepTimerHandle;
