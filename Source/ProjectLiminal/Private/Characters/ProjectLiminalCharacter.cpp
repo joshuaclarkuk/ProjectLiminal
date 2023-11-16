@@ -10,7 +10,7 @@
 #include "Sound/SoundBase.h"
 #include "Engine/World.h"
 #include "Items/InteractableBase.h"
-#include "Items/VendingMachine.h"
+#include "Items/CodeMachine.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -140,25 +140,25 @@ void AProjectLiminalCharacter::Click()
 
 void AProjectLiminalCharacter::PushLeftButton()
 {
-	if (PlayerState == EPS_Interacting && InteractableObjectIsVendingMachine)
+	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
 	{
-		InteractableObjectIsVendingMachine->PressButton(0);
+		InteractableObjectIsCodeMachine->PressButton(0);
 	}
 }
 
 void AProjectLiminalCharacter::PushMiddleButton()
 {
-	if (PlayerState == EPS_Interacting && InteractableObjectIsVendingMachine)
+	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
 	{
-		InteractableObjectIsVendingMachine->PressButton(1);
+		InteractableObjectIsCodeMachine->PressButton(1);
 	}
 }
 
 void AProjectLiminalCharacter::PushRightButton()
 {
-	if (PlayerState == EPS_Interacting && InteractableObjectIsVendingMachine)
+	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
 	{
-		InteractableObjectIsVendingMachine->PressButton(2);
+		InteractableObjectIsCodeMachine->PressButton(2);
 	}
 }
 
@@ -192,7 +192,7 @@ void AProjectLiminalCharacter::SweepForInteractable()
 			if (CurrentInteractableObject)
 			{
 				CurrentInteractableObject->SetInteractPromptVisibility(true);
-				InteractableObjectIsVendingMachine = Cast<AVendingMachine>(CurrentInteractableObject);
+				InteractableObjectIsCodeMachine = Cast<ACodeMachine>(CurrentInteractableObject);
 			}
 		}
 
@@ -203,7 +203,7 @@ void AProjectLiminalCharacter::SweepForInteractable()
 				CurrentInteractableObject->SetInteractPromptVisibility(false);
 			}
 			CurrentInteractableObject = nullptr;
-			InteractableObjectIsVendingMachine = nullptr;
+			InteractableObjectIsCodeMachine = nullptr;
 		}
 	}
 }

@@ -62,7 +62,7 @@ void AReceptionistWindow::CheckLevelSequenceFinished()
 
         // Clean up the Level Sequence player
         LevelSequencePlayer->Stop();
-        LevelSequencePlayer->MarkPendingKill();
+        LevelSequencePlayer->MarkAsGarbage();
         LevelSequencePlayer = nullptr;
     }
 }
