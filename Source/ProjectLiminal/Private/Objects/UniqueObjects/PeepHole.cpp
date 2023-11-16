@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Items/PeepHole.h"
+#include "Objects/UniqueObjects/PeepHole.h"
 #include "Components/PointLightComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"

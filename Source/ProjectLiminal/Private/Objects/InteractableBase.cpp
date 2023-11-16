@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Items/InteractableBase.h"
+#include "Objects/InteractableBase.h"
 #include "Components/WidgetComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SceneComponent.h"

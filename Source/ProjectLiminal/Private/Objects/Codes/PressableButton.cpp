@@ -1,11 +1,11 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Items/Codes/PressableButton.h"
+#include "Objects/Codes/PressableButton.h"
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
-#include "Items/InteractableBase.h"
-#include "Items/Codes/CodeComponent.h"
+#include "Objects/InteractableBase.h"
+#include "Objects/Codes/CodeComponent.h"
 #include "Sound/SoundBase.h"
 #include "Kismet/GameplayStatics.h"
 

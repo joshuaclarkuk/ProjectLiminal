@@ -1,10 +1,10 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Items/CodeMachine.h"
+#include "Objects/UniqueObjects/CodeMachine.h"
 #include "Config/ProjectLiminalPlayerController.h"
-#include "Items/Codes/CodeComponent.h"
-#include "Items/Codes/PressableButton.h"
+#include "Objects/Codes/CodeComponent.h"
+#include "Objects/Codes/PressableButton.h"
 #include "Components/PointLightComponent.h"
 
 ACodeMachine::ACodeMachine()

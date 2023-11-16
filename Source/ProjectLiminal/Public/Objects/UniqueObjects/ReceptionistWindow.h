@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Items/InteractableBase.h"
+#include "Objects/InteractableBase.h"
 #include "ReceptionistWindow.generated.h"
 
 class ULevelSequence;

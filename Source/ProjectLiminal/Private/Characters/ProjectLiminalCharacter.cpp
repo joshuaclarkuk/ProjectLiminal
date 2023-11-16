@@ -9,8 +9,8 @@
 #include "EnhancedInputSubsystems.h"
 #include "Sound/SoundBase.h"
 #include "Engine/World.h"
-#include "Items/InteractableBase.h"
-#include "Items/CodeMachine.h"
+#include "Objects/InteractableBase.h"
+#include "Objects/UniqueObjects/CodeMachine.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -195,12 +195,12 @@ void AProjectLiminalCharacter::SweepForInteractable()
 				InteractableObjectIsCodeMachine = Cast<ACodeMachine>(CurrentInteractableObject);
 			}
 		}
-
 		else
 		{
 			if (CurrentInteractableObject)
 			{
 				CurrentInteractableObject->SetInteractPromptVisibility(false);
+				PreviousInteractableObject = CurrentInteractableObject;
 			}
 			CurrentInteractableObject = nullptr;
 			InteractableObjectIsCodeMachine = nullptr;

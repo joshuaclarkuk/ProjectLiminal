@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Items/TicketDispenser.h"
+#include "Objects/UniqueObjects/TicketDispenser.h"
 #include "Components/SpotLightComponent.h"
 #include "Math/UnrealMathUtility.h"
 

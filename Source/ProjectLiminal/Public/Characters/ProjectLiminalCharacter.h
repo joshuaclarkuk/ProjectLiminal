@@ -94,6 +94,7 @@ protected:
 
 	EPlayerStates PlayerState = EPlayerStates::EPS_Unoccupied;
 	AInteractableBase* CurrentInteractableObject;
+	AInteractableBase* PreviousInteractableObject;
 	ACodeMachine* InteractableObjectIsCodeMachine;
 
 	FTimerHandle FootstepAudioTimerHandle;
