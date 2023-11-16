@@ -27,15 +27,22 @@ protected:
 	USpotLightComponent* SmallOrangeLight;
 
 	UPROPERTY(EditAnywhere, Category = "Light Setup")
-	float TargetLightIntensity = 300.0f;
+	float MaxLightIntensity = 1200.0f;
 
 	UPROPERTY(EditAnywhere, Category = "Light Setup")
-	float LightInterpSpeed = 100.0f;
+	float LightInterpSpeed = 1000.0f;
 
 	UPROPERTY(EditInstanceOnly)
 	bool bShouldTurnOn = false;
 
-	void TurnOnLight(float DeltaTime);
+	FTimerHandle LightFadeTimerHandle;
+	FTimerHandle LightFlickerTimerHandle;
+	float TargetLightIntensity = 0;
+	bool bShouldFlickerOn = false;
+	float FlickerInterval = 0.0f;
+
+	void MakeLightFade(float DeltaTime);
+	void MakeLightFlicker();
 
 	/*GETTERS & SETTERS*/
 public:
