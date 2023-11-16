@@ -11,6 +11,8 @@
 #include "Engine/World.h"
 #include "Objects/InteractableBase.h"
 #include "Objects/UniqueObjects/CodeMachine.h"
+#include "Inventory/InventoryComponent.h"
+#include "Objects/UniqueObjects/TicketDispenser.h"
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -38,6 +40,8 @@ AProjectLiminalCharacter::AProjectLiminalCharacter()
 
 	FootstepsAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("FootstepsAudioComponent"));
 	FootstepsAudioComponent->SetupAttachment(GetRootComponent());
+
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 void AProjectLiminalCharacter::BeginPlay()
@@ -89,6 +93,8 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 		EnhancedInputComponent->BindAction(PushMiddleButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushMiddleButton);
 		EnhancedInputComponent->BindAction(PushRightButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushRightButton);
 
+		// Inventory
+		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Inventory);
 	}
 }
 
@@ -162,6 +168,14 @@ void AProjectLiminalCharacter::PushRightButton()
 	}
 }
 
+void AProjectLiminalCharacter::Inventory()
+{
+	if (PlayerState == EPS_Unoccupied)
+	{
+		InventoryComponent->DisplayInventory();
+	}
+}
+
 void AProjectLiminalCharacter::PlayFootstepAudio()
 {
 	FVector CharacterSpeed = AProjectLiminalCharacter::GetVelocity();
@@ -193,6 +207,7 @@ void AProjectLiminalCharacter::SweepForInteractable()
 			{
 				CurrentInteractableObject->SetInteractPromptVisibility(true);
 				InteractableObjectIsCodeMachine = Cast<ACodeMachine>(CurrentInteractableObject);
+				InteractableObjectIsTicketDispenser = Cast<ATicketDispenser>(CurrentInteractableObject);
 			}
 		}
 		else
@@ -200,10 +215,10 @@ void AProjectLiminalCharacter::SweepForInteractable()
 			if (CurrentInteractableObject)
 			{
 				CurrentInteractableObject->SetInteractPromptVisibility(false);
-				PreviousInteractableObject = CurrentInteractableObject;
 			}
 			CurrentInteractableObject = nullptr;
 			InteractableObjectIsCodeMachine = nullptr;
+			InteractableObjectIsTicketDispenser = nullptr;
 		}
 	}
 }

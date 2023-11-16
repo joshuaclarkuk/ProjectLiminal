@@ -4,6 +4,10 @@
 #include "Objects/UniqueObjects/TicketDispenser.h"
 #include "Components/SpotLightComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "Kismet/GameplayStatics.h"
+#include "Config/ProjectLiminalPlayerController.h"
+#include "Characters/ProjectLiminalCharacter.h"
+#include "Inventory/InventoryComponent.h"
 
 ATicketDispenser::ATicketDispenser()
 {
@@ -21,6 +25,15 @@ ATicketDispenser::ATicketDispenser()
 void ATicketDispenser::BeginPlay()
 {
 	Super::BeginPlay();
+
+	// Initialise Player Controller reference
+	LiminalPlayerController = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+
+	// Initialise Player Character reference
+	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+
+	// Initialise Player Inventory reference
+	PlayerInventory = PlayerCharacter->GetComponentByClass<UInventoryComponent>();
 
 	// Set timer to flicker light
 	GetWorldTimerManager().SetTimer(LightFadeTimerHandle, this, &ATicketDispenser::MakeLightFlicker, FMath::FRandRange(0.1f, 0.4f), true);
@@ -64,5 +77,26 @@ void ATicketDispenser::MakeLightFlicker()
 		FlickerInterval = FMath::FRandRange(0.1f, 1.0f);
 		TargetLightIntensity = FMath::FRandRange(MaxLightIntensity / 2, MaxLightIntensity);
 		GetWorldTimerManager().SetTimer(LightFadeTimerHandle, this, &ATicketDispenser::MakeLightFlicker, FlickerInterval, true);
+	}
+}
+
+void ATicketDispenser::MovePlayerInFrontOfObject()
+{
+	Super::MovePlayerInFrontOfObject();
+
+	if (PlayerCharacter)
+	{
+		PlayerCharacter->DisableInput(LiminalPlayerController);
+
+		if (PlayerInventory && TicketItem)
+		{
+			// Play ticket grab animation
+			PlayerInventory->AddItemToInventory(TicketItem);
+			TicketItem->SetActorHiddenInGame(true);
+			// Display ticket inventory screen popup
+			// Return to ticket dispenser
+		}
+
+		PlayerCharacter->EnableInput(LiminalPlayerController);
 	}
 }

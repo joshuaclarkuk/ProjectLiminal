@@ -7,6 +7,9 @@
 #include "TicketDispenser.generated.h"
 
 class USpotLightComponent;
+class AProjectLiminalPlayerController;
+class AProjectLiminalCharacter;
+class UInventoryComponent;
 
 /**
  * 
@@ -22,6 +25,9 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+
+	UPROPERTY(EditInstanceOnly, Category = "Scene References")
+	AActor* TicketItem;
 
 	UPROPERTY(EditAnywhere, Category = "Light Setup")
 	USpotLightComponent* SmallOrangeLight;
@@ -41,6 +47,11 @@ protected:
 	bool bShouldFlickerOn = false;
 	float FlickerInterval = 0.0f;
 
+	AProjectLiminalPlayerController* LiminalPlayerController;
+	AProjectLiminalCharacter* PlayerCharacter;
+	UInventoryComponent* PlayerInventory;
+
+	virtual void MovePlayerInFrontOfObject() override;
 	void MakeLightFade(float DeltaTime);
 	void MakeLightFlicker();
 

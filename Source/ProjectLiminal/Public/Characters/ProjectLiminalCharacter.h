@@ -17,11 +17,14 @@ class UAudioComponent;
 class AInteractableBase;
 class AProjectLiminalPlayerController;
 class ACodeMachine;
+class UInventoryComponent;
+class ATicketDispenser;
 
 UENUM()
 enum EPlayerStates {
 	EPS_Unoccupied,
 	EPS_Interacting,
+	EPS_InInventory,
 	EPS_RelinquishControl
 };
 
@@ -72,6 +75,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* PushRightButtonAction;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* InventoryAction;
+
 	/** Pawn mesh: 1st person view (arms; seen only by self) */
 	UPROPERTY(VisibleAnywhere, Category = Mesh)
 	USkeletalMeshComponent* Mesh1P;
@@ -86,6 +92,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Audio, meta = (AllowPrivateAccess = "true"))
 	USoundBase* FootstepMetaSound;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	UInventoryComponent* InventoryComponent;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
 	float MovementSpeedModifier = 1.0f;
 
@@ -94,8 +103,8 @@ protected:
 
 	EPlayerStates PlayerState = EPlayerStates::EPS_Unoccupied;
 	AInteractableBase* CurrentInteractableObject;
-	AInteractableBase* PreviousInteractableObject;
 	ACodeMachine* InteractableObjectIsCodeMachine;
+	ATicketDispenser* InteractableObjectIsTicketDispenser;
 
 	FTimerHandle FootstepAudioTimerHandle;
 	FTimerHandle SweepTimerHandle;
@@ -107,6 +116,7 @@ protected:
 	void PushLeftButton();
 	void PushMiddleButton();
 	void PushRightButton();
+	void Inventory();
 
 	void PlayFootstepAudio();
 	void SweepForInteractable();
