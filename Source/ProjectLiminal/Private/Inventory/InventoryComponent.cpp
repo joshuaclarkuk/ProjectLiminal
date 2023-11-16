@@ -5,6 +5,7 @@
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Config/ProjectLiminalPlayerController.h"
 #include "Kismet/GameplayStatics.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -23,6 +24,7 @@ void UInventoryComponent::BeginPlay()
 
 	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	LiminalPlayerController = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	PlayerCamera = PlayerCharacter->GetFirstPersonCameraComponent();
 }
 
 void UInventoryComponent::AddItemToInventory(AActor* Item)
@@ -36,10 +38,31 @@ void UInventoryComponent::AddItemToInventory(AActor* Item)
 
 void UInventoryComponent::DisplayInventory()
 {
-	for (int i = 0; i < Items.Num(); i++)
+	if (PlayerCharacter && PlayerCamera)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Inventory contains: %s"), *Items[i]->GetName());
+		PlayerCharacter->SetPlayerState(EPS_InInventory);
+		AlterCameraDepthOfField(true);
 
+		for (int i = 0; i < Items.Num(); i++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Inventory contains: %s"), *Items[i]->GetName());
+		}
 	}
+}
+
+void UInventoryComponent::CloseInventory()
+{
+	if (PlayerCharacter && PlayerCamera)
+	{
+		PlayerCharacter->SetPlayerState(EPS_Unoccupied);
+		AlterCameraDepthOfField(false);
+		UE_LOG(LogTemp, Warning, TEXT("Inventory closed"));
+	}
+}
+
+void UInventoryComponent::AlterCameraDepthOfField(bool Enable)
+{
+	PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldScale = Enable;
+	PlayerCamera->PostProcessSettings.DepthOfFieldScale = Enable ? 1.0f : 0.0f;
 }
 

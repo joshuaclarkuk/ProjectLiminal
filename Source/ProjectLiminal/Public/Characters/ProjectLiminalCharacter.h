@@ -132,5 +132,6 @@ public:
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
 	EPlayerStates GetPlayerState() { return PlayerState; }
+	void SetPlayerState(EPlayerStates NewState) { PlayerState = NewState; }
 };
 

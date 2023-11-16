@@ -174,6 +174,10 @@ void AProjectLiminalCharacter::Inventory()
 	{
 		InventoryComponent->DisplayInventory();
 	}
+	else if (PlayerState == EPS_InInventory)
+	{
+		InventoryComponent->CloseInventory();
+	}
 }
 
 void AProjectLiminalCharacter::PlayFootstepAudio()

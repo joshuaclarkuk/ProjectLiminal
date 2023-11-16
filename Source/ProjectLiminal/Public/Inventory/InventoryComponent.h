@@ -8,6 +8,7 @@
 
 class AProjectLiminalCharacter;
 class AProjectLiminalPlayerController;
+class UCameraComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTLIMINAL_API UInventoryComponent : public UActorComponent
@@ -30,8 +31,12 @@ protected:
 
 	AProjectLiminalCharacter* PlayerCharacter;
 	AProjectLiminalPlayerController* LiminalPlayerController;
+	UCameraComponent* PlayerCamera;
+
+	void AlterCameraDepthOfField(bool Enable);
 
 public:
 	void AddItemToInventory(AActor* Item);
 	void DisplayInventory();
+	void CloseInventory();
 };
