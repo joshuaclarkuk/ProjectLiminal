@@ -19,6 +19,7 @@ class AProjectLiminalPlayerController;
 class ACodeMachine;
 class UInventoryComponent;
 class ATicketDispenser;
+class UWidgetComponent;
 
 UENUM()
 enum EPlayerStates {
@@ -94,6 +95,9 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	UInventoryComponent* InventoryComponent;
+
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	UWidgetComponent* BlurScreenWidget;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
 	float MovementSpeedModifier = 1.0f;

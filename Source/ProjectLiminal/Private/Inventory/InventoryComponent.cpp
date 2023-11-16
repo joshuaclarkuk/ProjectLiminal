@@ -5,7 +5,7 @@
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Config/ProjectLiminalPlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Camera/CameraComponent.h"
+#include "Components/WidgetComponent.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -24,7 +24,6 @@ void UInventoryComponent::BeginPlay()
 
 	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	LiminalPlayerController = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	PlayerCamera = PlayerCharacter->GetFirstPersonCameraComponent();
 }
 
 void UInventoryComponent::AddItemToInventory(AActor* Item)
@@ -38,7 +37,7 @@ void UInventoryComponent::AddItemToInventory(AActor* Item)
 
 void UInventoryComponent::DisplayInventory()
 {
-	if (PlayerCharacter && PlayerCamera)
+	if (PlayerCharacter)
 	{
 		PlayerCharacter->SetPlayerState(EPS_InInventory);
 		AlterCameraDepthOfField(true);
@@ -52,7 +51,7 @@ void UInventoryComponent::DisplayInventory()
 
 void UInventoryComponent::CloseInventory()
 {
-	if (PlayerCharacter && PlayerCamera)
+	if (PlayerCharacter)
 	{
 		PlayerCharacter->SetPlayerState(EPS_Unoccupied);
 		AlterCameraDepthOfField(false);
@@ -62,7 +61,9 @@ void UInventoryComponent::CloseInventory()
 
 void UInventoryComponent::AlterCameraDepthOfField(bool Enable)
 {
-	PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldScale = Enable;
-	PlayerCamera->PostProcessSettings.DepthOfFieldScale = Enable ? 1.0f : 0.0f;
+	if (BlurScreenWidget)
+	{
+		BlurScreenWidget->SetVisibility(Enable);
+	}
 }
 

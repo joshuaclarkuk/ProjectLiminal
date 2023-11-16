@@ -8,7 +8,7 @@
 
 class AProjectLiminalCharacter;
 class AProjectLiminalPlayerController;
-class UCameraComponent;
+class UWidgetComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTLIMINAL_API UInventoryComponent : public UActorComponent
@@ -31,7 +31,7 @@ protected:
 
 	AProjectLiminalCharacter* PlayerCharacter;
 	AProjectLiminalPlayerController* LiminalPlayerController;
-	UCameraComponent* PlayerCamera;
+	UWidgetComponent* BlurScreenWidget;
 
 	void AlterCameraDepthOfField(bool Enable);
 
