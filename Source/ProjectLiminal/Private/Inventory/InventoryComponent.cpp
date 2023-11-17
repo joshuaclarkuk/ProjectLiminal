@@ -5,7 +5,8 @@
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Config/ProjectLiminalPlayerController.h"
 #include "Kismet/GameplayStatics.h"
-#include "Components/WidgetComponent.h"
+#include "Inventory/InventoryHUD.h"
+#include "Inventory/InventoryOverlay.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -24,6 +25,8 @@ void UInventoryComponent::BeginPlay()
 
 	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	LiminalPlayerController = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
+	InventoryHUD = Cast<AInventoryHUD>(LiminalPlayerController->GetHUD());
+	InventoryOverlay = InventoryHUD->GetInventoryOverlay();
 }
 
 void UInventoryComponent::AddItemToInventory(AActor* Item)
@@ -37,11 +40,10 @@ void UInventoryComponent::AddItemToInventory(AActor* Item)
 
 void UInventoryComponent::DisplayInventory()
 {
-	if (PlayerCharacter)
+	if (PlayerCharacter && InventoryOverlay)
 	{
 		PlayerCharacter->SetPlayerState(EPS_InInventory);
-		AlterCameraDepthOfField(true);
-
+		InventoryOverlay->SetBlurState(EBlurState::EBS_Blurring);
 		for (int i = 0; i < Items.Num(); i++)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Inventory contains: %s"), *Items[i]->GetName());
@@ -51,19 +53,11 @@ void UInventoryComponent::DisplayInventory()
 
 void UInventoryComponent::CloseInventory()
 {
-	if (PlayerCharacter)
+	if (PlayerCharacter && InventoryOverlay)
 	{
 		PlayerCharacter->SetPlayerState(EPS_Unoccupied);
-		AlterCameraDepthOfField(false);
+		InventoryOverlay->SetBlurState(EBlurState::EBS_Deblurring);
 		UE_LOG(LogTemp, Warning, TEXT("Inventory closed"));
-	}
-}
-
-void UInventoryComponent::AlterCameraDepthOfField(bool Enable)
-{
-	if (BlurScreenWidget)
-	{
-		BlurScreenWidget->SetVisibility(Enable);
 	}
 }
 

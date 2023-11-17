@@ -8,7 +8,8 @@
 
 class AProjectLiminalCharacter;
 class AProjectLiminalPlayerController;
-class UWidgetComponent;
+class AInventoryHUD;
+class UInventoryOverlay;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTLIMINAL_API UInventoryComponent : public UActorComponent
@@ -31,9 +32,8 @@ protected:
 
 	AProjectLiminalCharacter* PlayerCharacter;
 	AProjectLiminalPlayerController* LiminalPlayerController;
-	UWidgetComponent* BlurScreenWidget;
-
-	void AlterCameraDepthOfField(bool Enable);
+	AInventoryHUD* InventoryHUD;
+	UInventoryOverlay* InventoryOverlay;
 
 public:
 	void AddItemToInventory(AActor* Item);

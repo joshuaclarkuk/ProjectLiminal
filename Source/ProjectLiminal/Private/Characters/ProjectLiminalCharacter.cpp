@@ -13,7 +13,6 @@
 #include "Objects/UniqueObjects/CodeMachine.h"
 #include "Inventory/InventoryComponent.h"
 #include "Objects/UniqueObjects/TicketDispenser.h"
-#include "Components/WidgetComponent.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AProjectLiminalCharacter
@@ -42,10 +41,6 @@ AProjectLiminalCharacter::AProjectLiminalCharacter()
 	FootstepsAudioComponent->SetupAttachment(GetRootComponent());
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
-
-	BlurScreenWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("BlurScreenWidget"));
-	BlurScreenWidget->SetupAttachment(GetRootComponent());
-	BlurScreenWidget->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void AProjectLiminalCharacter::BeginPlay()
@@ -67,10 +62,6 @@ void AProjectLiminalCharacter::BeginPlay()
 
 	// Start sweep for interactables
 	GetWorldTimerManager().SetTimer(SweepTimerHandle, this, &AProjectLiminalCharacter::SweepForInteractable, 0.1f, true);
-
-	// Initialise Screen Blur widget
-	BlurScreenWidget->InitWidget();
-
 }
 
 //////////////////////////////////////////////////////////////////////////// Input
