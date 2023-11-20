@@ -62,9 +62,16 @@ void UInventoryComponent::CloseInventory()
 {
 	if (PlayerCharacter && InventoryOverlay && PlayerCamera)
 	{
+		// Lock player and perform DOF effect
 		PlayerCharacter->SetPlayerState(EPS_Unoccupied);
 		PlayerCamera->PostProcessSettings.DepthOfFieldFocalDistance = DefaultDepthOfField;
 		PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = false;
+
+		// Hide Inventory items on closure
+		for (int i = 0; i < Items.Num(); i++)
+		{
+			Items[i]->ToggleVisibilityInGame(false);
+		}
 		//InventoryOverlay->SetBlurState(EBlurState::EBS_Deblurring);
 		UE_LOG(LogTemp, Warning, TEXT("Inventory closed"));
 	}
@@ -74,7 +81,6 @@ void UInventoryComponent::DisplayInventoryItem()
 {
 	if (!Items.IsEmpty())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Location to move object to is: %s"), *PlayerCharacter->GetLocationToDisplayInventoryItem().ToString());
 		Items[0]->SetActorLocation(PlayerCharacter->GetLocationToDisplayInventoryItem());
 		Items[0]->SetActorRotation(PlayerCharacter->GetRotationToDisplayInventoryItem());
 		Items[0]->ToggleVisibilityInGame(true);
