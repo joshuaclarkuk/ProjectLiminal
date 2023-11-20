@@ -8,8 +8,6 @@
 
 class AProjectLiminalCharacter;
 class AProjectLiminalPlayerController;
-class AInventoryHUD;
-class UInventoryOverlay;
 class UCameraComponent;
 class AItemBase;
 
@@ -38,8 +36,6 @@ protected:
 
 	AProjectLiminalCharacter* PlayerCharacter;
 	AProjectLiminalPlayerController* LiminalPlayerController;
-	AInventoryHUD* InventoryHUD;
-	UInventoryOverlay* InventoryOverlay;
 	UCameraComponent* PlayerCamera;
 
 	void DisplayInventoryItem();
