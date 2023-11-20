@@ -7,6 +7,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Inventory/InventoryHUD.h"
 #include "Inventory/InventoryOverlay.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -27,6 +28,7 @@ void UInventoryComponent::BeginPlay()
 	LiminalPlayerController = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	InventoryHUD = Cast<AInventoryHUD>(LiminalPlayerController->GetHUD());
 	InventoryOverlay = InventoryHUD->GetInventoryOverlay();
+	PlayerCamera = PlayerCharacter->GetComponentByClass<UCameraComponent>();
 }
 
 void UInventoryComponent::AddItemToInventory(AActor* Item)
@@ -40,10 +42,12 @@ void UInventoryComponent::AddItemToInventory(AActor* Item)
 
 void UInventoryComponent::DisplayInventory()
 {
-	if (PlayerCharacter && InventoryOverlay)
+	if (PlayerCharacter && InventoryOverlay && PlayerCamera)
 	{
 		PlayerCharacter->SetPlayerState(EPS_InInventory);
-		InventoryOverlay->SetBlurState(EBlurState::EBS_Blurring);
+		PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
+		PlayerCamera->PostProcessSettings.DepthOfFieldFocalDistance = AdjustedDepthOfField;
+		//InventoryOverlay->SetBlurState(EBlurState::EBS_Blurring);
 		for (int i = 0; i < Items.Num(); i++)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Inventory contains: %s"), *Items[i]->GetName());
@@ -53,10 +57,12 @@ void UInventoryComponent::DisplayInventory()
 
 void UInventoryComponent::CloseInventory()
 {
-	if (PlayerCharacter && InventoryOverlay)
+	if (PlayerCharacter && InventoryOverlay && PlayerCamera)
 	{
 		PlayerCharacter->SetPlayerState(EPS_Unoccupied);
-		InventoryOverlay->SetBlurState(EBlurState::EBS_Deblurring);
+		PlayerCamera->PostProcessSettings.DepthOfFieldFocalDistance = DefaultDepthOfField;
+		PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = false;
+		//InventoryOverlay->SetBlurState(EBlurState::EBS_Deblurring);
 		UE_LOG(LogTemp, Warning, TEXT("Inventory closed"));
 	}
 }
