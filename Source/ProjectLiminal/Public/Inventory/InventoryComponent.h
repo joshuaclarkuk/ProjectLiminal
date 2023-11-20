@@ -34,6 +34,9 @@ protected:
 	float AdjustedDepthOfField = 20.0f;
 	float DefaultDepthOfField = 0.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	float ItemSpacing = 100.0f;
+
 	AProjectLiminalCharacter* PlayerCharacter;
 	AProjectLiminalPlayerController* LiminalPlayerController;
 	UCameraComponent* PlayerCamera;

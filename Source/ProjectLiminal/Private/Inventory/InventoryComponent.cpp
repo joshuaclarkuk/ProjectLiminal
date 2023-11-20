@@ -40,7 +40,7 @@ void UInventoryComponent::AddItemToInventory(AItemBase* Item)
 
 void UInventoryComponent::DisplayInventory()
 {
-	if (PlayerCharacter && PlayerCamera)
+	if (PlayerCharacter && PlayerCamera &&!Items.IsEmpty())
 	{
 		PlayerCharacter->SetPlayerState(EPS_InInventory);
 		PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
@@ -72,12 +72,15 @@ void UInventoryComponent::CloseInventory()
 }
 
 void UInventoryComponent::DisplayInventoryItem()
-{
-	if (!Items.IsEmpty())
+{ 
+	for (int i = 0; i < Items.Num(); i++)
 	{
-		Items[0]->SetActorLocation(PlayerCharacter->GetLocationToDisplayInventoryItem());
-		Items[0]->SetActorRotation(PlayerCharacter->GetRotationToDisplayInventoryItem());
-		Items[0]->ToggleVisibilityInGame(true);
+		Items[i]->SetActorLocation(PlayerCharacter->GetLocationToDisplayInventoryItem() + PlayerCharacter->GetActorRightVector() * ItemSpacing * i);
+		Items[i]->SetActorRotation(PlayerCharacter->GetRotationToDisplayInventoryItem());
+		Items[i]->ToggleVisibilityInGame(true);
 	}
+	//Items[0]->SetActorLocation(PlayerCharacter->GetLocationToDisplayInventoryItem());
+	//Items[0]->SetActorRotation(PlayerCharacter->GetRotationToDisplayInventoryItem());
+	//Items[0]->ToggleVisibilityInGame(true);
 }
 
