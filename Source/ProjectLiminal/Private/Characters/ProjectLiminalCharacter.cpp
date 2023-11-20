@@ -41,6 +41,9 @@ AProjectLiminalCharacter::AProjectLiminalCharacter()
 	FootstepsAudioComponent->SetupAttachment(GetRootComponent());
 
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+
+	LocationToDisplayInventoryItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LocationToDisplayInventoryItem"));
+	LocationToDisplayInventoryItem->SetupAttachment(FirstPersonCameraComponent);
 }
 
 void AProjectLiminalCharacter::BeginPlay()

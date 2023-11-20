@@ -10,6 +10,7 @@ class USpotLightComponent;
 class AProjectLiminalPlayerController;
 class AProjectLiminalCharacter;
 class UInventoryComponent;
+class AItemBase;
 
 /**
  * 
@@ -27,7 +28,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditInstanceOnly, Category = "Scene References")
-	AActor* TicketItem;
+	AItemBase* TicketItem;
 
 	UPROPERTY(EditAnywhere, Category = "Light Setup")
 	USpotLightComponent* SmallOrangeLight;

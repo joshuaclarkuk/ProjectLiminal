@@ -95,6 +95,9 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	UInventoryComponent* InventoryComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	USceneComponent* LocationToDisplayInventoryItem;
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
 	float MovementSpeedModifier = 1.0f;
 
@@ -131,7 +134,12 @@ public:
 	/** Returns FirstPersonCameraComponent subobject **/
 	UCameraComponent* GetFirstPersonCameraComponent() const { return FirstPersonCameraComponent; }
 
+	// Get and Set Player State to prevent player movement
 	EPlayerStates GetPlayerState() { return PlayerState; }
 	void SetPlayerState(EPlayerStates NewState) { PlayerState = NewState; }
+
+	// Get location to display inventory item (usable in UInventoryComponent)
+	FVector GetLocationToDisplayInventoryItem() { return LocationToDisplayInventoryItem->GetComponentLocation(); }	
+	FRotator GetRotationToDisplayInventoryItem() { return LocationToDisplayInventoryItem->GetComponentRotation(); }
 };
 

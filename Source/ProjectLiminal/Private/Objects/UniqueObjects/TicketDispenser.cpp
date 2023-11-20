@@ -8,6 +8,7 @@
 #include "Config/ProjectLiminalPlayerController.h"
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Inventory/InventoryComponent.h"
+#include "Inventory/Items/ItemBase.h"
 
 ATicketDispenser::ATicketDispenser()
 {
@@ -86,15 +87,14 @@ void ATicketDispenser::MovePlayerInFrontOfObject()
 
 	if (PlayerCharacter)
 	{
+		// Disable input while animation plays (not currently in use)
 		PlayerCharacter->DisableInput(LiminalPlayerController);
 
 		if (PlayerInventory && TicketItem)
 		{
-			// Play ticket grab animation
+			// TODO: Play ticket grab animation
 			PlayerInventory->AddItemToInventory(TicketItem);
-			TicketItem->SetActorHiddenInGame(true);
-			// Display ticket inventory screen popup
-			// Return to ticket dispenser
+			TicketItem->ToggleVisibilityInGame(false);
 		}
 
 		PlayerCharacter->EnableInput(LiminalPlayerController);

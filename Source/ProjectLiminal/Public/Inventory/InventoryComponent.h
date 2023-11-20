@@ -11,6 +11,7 @@ class AProjectLiminalPlayerController;
 class AInventoryHUD;
 class UInventoryOverlay;
 class UCameraComponent;
+class AItemBase;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTLIMINAL_API UInventoryComponent : public UActorComponent
@@ -29,7 +30,7 @@ protected:
 	int32 MaxItemsInInventory = 5;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
-	TArray<AActor*> Items;
+	TArray<AItemBase*> Items;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	float AdjustedDepthOfField = 20.0f;
@@ -41,8 +42,10 @@ protected:
 	UInventoryOverlay* InventoryOverlay;
 	UCameraComponent* PlayerCamera;
 
+	void DisplayInventoryItem();
+
 public:
-	void AddItemToInventory(AActor* Item);
+	void AddItemToInventory(AItemBase* Item);
 	void DisplayInventory();
 	void CloseInventory();
 };

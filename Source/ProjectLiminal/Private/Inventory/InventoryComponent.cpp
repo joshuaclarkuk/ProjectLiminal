@@ -8,6 +8,8 @@
 #include "Inventory/InventoryHUD.h"
 #include "Inventory/InventoryOverlay.h"
 #include "Camera/CameraComponent.h"
+#include "Inventory/Items/ItemBase.h"
+#include "Inventory/Items/Item_Ticket.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -31,7 +33,7 @@ void UInventoryComponent::BeginPlay()
 	PlayerCamera = PlayerCharacter->GetComponentByClass<UCameraComponent>();
 }
 
-void UInventoryComponent::AddItemToInventory(AActor* Item)
+void UInventoryComponent::AddItemToInventory(AItemBase* Item)
 {
 	if (Item)
 	{
@@ -47,6 +49,7 @@ void UInventoryComponent::DisplayInventory()
 		PlayerCharacter->SetPlayerState(EPS_InInventory);
 		PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = true;
 		PlayerCamera->PostProcessSettings.DepthOfFieldFocalDistance = AdjustedDepthOfField;
+		DisplayInventoryItem();
 		//InventoryOverlay->SetBlurState(EBlurState::EBS_Blurring);
 		for (int i = 0; i < Items.Num(); i++)
 		{
@@ -64,6 +67,15 @@ void UInventoryComponent::CloseInventory()
 		PlayerCamera->PostProcessSettings.bOverride_DepthOfFieldFocalDistance = false;
 		//InventoryOverlay->SetBlurState(EBlurState::EBS_Deblurring);
 		UE_LOG(LogTemp, Warning, TEXT("Inventory closed"));
+	}
+}
+
+void UInventoryComponent::DisplayInventoryItem()
+{
+	if (!Items.IsEmpty())
+	{
+		//FActorSpawnParameters SpawnInfo;
+		//AItem_Ticket* TicketItem = GetWorld()->SpawnActor<AItemBase>(PlayerCharacter->GetLocationToDisplayInventoryItem(), PlayerCharacter->GetRotationToDisplayInventoryItem(), SpawnInfo);
 	}
 }
 
