@@ -32,8 +32,6 @@ UCLASS(config=Game)
 class AProjectLiminalCharacter : public ACharacter
 {
 	GENERATED_BODY()
-
-
 	
 public:
 	AProjectLiminalCharacter();

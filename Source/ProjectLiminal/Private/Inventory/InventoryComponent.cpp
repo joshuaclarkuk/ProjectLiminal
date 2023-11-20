@@ -74,8 +74,10 @@ void UInventoryComponent::DisplayInventoryItem()
 {
 	if (!Items.IsEmpty())
 	{
-		//FActorSpawnParameters SpawnInfo;
-		//AItem_Ticket* TicketItem = GetWorld()->SpawnActor<AItemBase>(PlayerCharacter->GetLocationToDisplayInventoryItem(), PlayerCharacter->GetRotationToDisplayInventoryItem(), SpawnInfo);
+		UE_LOG(LogTemp, Warning, TEXT("Location to move object to is: %s"), *PlayerCharacter->GetLocationToDisplayInventoryItem().ToString());
+		Items[0]->SetActorLocation(PlayerCharacter->GetLocationToDisplayInventoryItem());
+		Items[0]->SetActorRotation(PlayerCharacter->GetRotationToDisplayInventoryItem());
+		Items[0]->ToggleVisibilityInGame(true);
 	}
 }
 

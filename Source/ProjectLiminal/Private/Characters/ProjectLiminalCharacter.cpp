@@ -44,6 +44,7 @@ AProjectLiminalCharacter::AProjectLiminalCharacter()
 
 	LocationToDisplayInventoryItem = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LocationToDisplayInventoryItem"));
 	LocationToDisplayInventoryItem->SetupAttachment(FirstPersonCameraComponent);
+	LocationToDisplayInventoryItem->SetRelativeLocation(FVector(70.0f, 0.0f, 0.0f));
 }
 
 void AProjectLiminalCharacter::BeginPlay()

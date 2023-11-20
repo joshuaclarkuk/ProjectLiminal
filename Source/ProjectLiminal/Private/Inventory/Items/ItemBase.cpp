@@ -13,9 +13,9 @@ AItemBase::AItemBase()
 	SceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("SceneComponent"));
 	SetRootComponent(SceneComponent);
 
-	TicketMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TicketMesh"));
-	TicketMesh->SetupAttachment(GetRootComponent());
-	TicketMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	ItemMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ItemMesh"));
+	ItemMesh->SetupAttachment(SceneComponent);
+	ItemMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 // Called when the game starts or when spawned

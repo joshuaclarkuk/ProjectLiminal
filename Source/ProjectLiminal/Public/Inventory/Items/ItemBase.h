@@ -25,7 +25,7 @@ protected:
 	USceneComponent* SceneComponent;
 
 	UPROPERTY(EditDefaultsOnly)
-	UStaticMeshComponent* TicketMesh;
+	UStaticMeshComponent* ItemMesh;
 
 	UPROPERTY(EditDefaultsOnly)
 	FRotator RotationRate = FRotator(0.0f, 180.0f, 0.0f);

@@ -16,10 +16,5 @@ class PROJECTLIMINAL_API AItem_Ticket : public AItemBase
 {
 	GENERATED_BODY()
 
-public:
-	AItem_Ticket();
-
-protected:
-	USphereComponent* TesterSphere;
 	
 };
