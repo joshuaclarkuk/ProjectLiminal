@@ -36,6 +36,9 @@ class AProjectLiminalCharacter : public ACharacter
 public:
 	AProjectLiminalCharacter();
 
+	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
+	USceneComponent* LocationToDisplayInventoryItem;
+
 protected:
 	virtual void BeginPlay();	
 
@@ -92,9 +95,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	UInventoryComponent* InventoryComponent;
-
-	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
-	USceneComponent* LocationToDisplayInventoryItem;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
 	float MovementSpeedModifier = 1.0f;

@@ -104,16 +104,28 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 
 void AProjectLiminalCharacter::Move(const FInputActionValue& Value)
 {
-	if (PlayerState == EPS_Unoccupied)
-	{
-		// input is a Vector2D
-		FVector2D MovementVector = Value.Get<FVector2D>();
+	// input is a Vector2D
+	FVector2D MovementVector = Value.Get<FVector2D>();
 
-		if (Controller != nullptr)
+	if (PlayerState == EPS_Unoccupied && Controller)
+	{
+		AddMovementInput(GetActorForwardVector(), MovementVector.Y * MovementSpeedModifier);
+		AddMovementInput(GetActorRightVector(), MovementVector.X * MovementSpeedModifier);
+	}
+	// Feels massively clumsy but can't think of a better way to tackle movement by interp right now
+	else if (PlayerState == EPS_InInventory && Controller && InventoryComponent && !InventoryComponent->GetIsScrolling())
+	{
+		if (MovementVector.X < 0.0f)
 		{
-			// add movement 
-			AddMovementInput(GetActorForwardVector(), MovementVector.Y * MovementSpeedModifier);
-			AddMovementInput(GetActorRightVector(), MovementVector.X * MovementSpeedModifier);
+			InventoryComponent->SetScrollBehaviour(true, true);
+		}
+		else if (MovementVector.X > 0.1f)
+		{
+			InventoryComponent->SetScrollBehaviour(true, false);
+		}
+		else
+		{
+			InventoryComponent->SetScrollBehaviour(false, true);
 		}
 	}
 }

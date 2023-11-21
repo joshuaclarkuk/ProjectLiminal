@@ -20,6 +20,8 @@ public:
 	// Sets default values for this component's properties
 	UInventoryComponent();
 
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
@@ -37,14 +39,33 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
 	float ItemSpacing = 100.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	FRotator RotationToAddToInventoryItem = FRotator(0.0f, 50.0f, 0.0f);
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Inventory")
+	float ScrollSpeed = 600.0f;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	TArray<FVector> ItemStartingPositions;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Inventory")
+	TArray<FVector> ItemTargetPositions;
+
 	AProjectLiminalCharacter* PlayerCharacter;
 	AProjectLiminalPlayerController* LiminalPlayerController;
 	UCameraComponent* PlayerCamera;
 
-	void DisplayInventoryItem();
+	bool bShouldScroll = false;
+	bool bIsScrollingLeft = true;
+	bool bIsScrolling = false;
+
+	void DisplayItems();
+	void ScrollThroughItems(float DeltaTime);
 
 public:
 	void AddItemToInventory(AItemBase* Item);
 	void DisplayInventory();
 	void CloseInventory();
+	void SetScrollBehaviour(bool ShouldStartScrolling, bool ShouldScrollLeft);
+	bool GetIsScrolling() { return bIsScrolling; }
 };
