@@ -46,7 +46,7 @@ void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 			Items[i]->SetActorRotation(CurrentRotation + RotationToAdd * DeltaTime);
 		}
 
-		if (bShouldScroll)
+		if (bShouldScroll && !ItemStartingPositions.IsEmpty() && !ItemTargetPositions.IsEmpty())
 		{
 			ScrollThroughItems(DeltaTime);
 		}
@@ -90,6 +90,9 @@ void UInventoryComponent::CloseInventory()
 		{
 			Items[i]->ToggleVisibilityInGame(false);
 		}
+
+		// Reset arrays and ScrollIndex ready for next Inventory screen
+		ScrollIndex = 0;
 		ItemStartingPositions.Empty();
 		ItemTargetPositions.Empty();
 		UE_LOG(LogTemp, Warning, TEXT("Inventory closed"));
@@ -133,13 +136,43 @@ void UInventoryComponent::SetScrollBehaviour(bool ShouldStartScrolling, bool Sho
 	ItemStartingPositions.Empty();
 	ItemTargetPositions.Empty();
 
-	// Initialise starting positions
-	for (int i = 0; i < Items.Num(); i++)
-	{
-		ItemStartingPositions.Add(Items[i]->GetActorLocation());
-		ItemTargetPositions.Add(bIsScrollingLeft ? ItemStartingPositions[i] - PlayerCharacter->LocationToDisplayInventoryItem->GetRightVector() * ItemSpacing : ItemStartingPositions[i] + PlayerCharacter->LocationToDisplayInventoryItem->GetRightVector() * ItemSpacing);
-	}
+	DetermineValidScroll();
 
+	// Trigger scrolling
 	bShouldScroll = ShouldStartScrolling;
+}
+
+void UInventoryComponent::DetermineValidScroll()
+{
+	// Check there is an item to scroll to
+	if (bIsScrollingLeft && ScrollIndex < Items.Num() - 1)
+	{
+		// Initialise starting positions
+		for (int i = 0; i < Items.Num(); i++)
+		{
+			ItemStartingPositions.Add(Items[i]->GetActorLocation());
+			ItemTargetPositions.Add(ItemStartingPositions[i] - PlayerCharacter->LocationToDisplayInventoryItem->GetRightVector() * ItemSpacing);
+		}
+
+		ScrollIndex++;
+		UE_LOG(LogTemp, Warning, TEXT("ScrollIndex: %d"), ScrollIndex);
+	}
+	// Check there is an item to scroll to
+	else if (!bIsScrollingLeft && ScrollIndex > 0)
+	{
+		// Initialise starting positions
+		for (int i = 0; i < Items.Num(); i++)
+		{
+			ItemStartingPositions.Add(Items[i]->GetActorLocation());
+			ItemTargetPositions.Add(ItemStartingPositions[i] + PlayerCharacter->LocationToDisplayInventoryItem->GetRightVector() * ItemSpacing);
+		}
+
+		ScrollIndex--;
+		UE_LOG(LogTemp, Warning, TEXT("ScrollIndex: %d"), ScrollIndex);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Cannot scroll. ScrollIndex out of bounds."));
+	}
 }
 

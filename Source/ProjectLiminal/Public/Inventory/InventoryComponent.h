@@ -55,12 +55,14 @@ protected:
 	AProjectLiminalPlayerController* LiminalPlayerController;
 	UCameraComponent* PlayerCamera;
 
+	int32 ScrollIndex = 0;
 	bool bShouldScroll = false;
 	bool bIsScrollingLeft = true;
 	bool bIsScrolling = false;
 
 	void DisplayItems();
 	void ScrollThroughItems(float DeltaTime);
+	void DetermineValidScroll();
 
 public:
 	void AddItemToInventory(AItemBase* Item);
