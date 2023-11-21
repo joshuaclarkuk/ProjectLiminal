@@ -66,7 +66,7 @@ protected:
 
 public:
 	void AddItemToInventory(AItemBase* Item);
-	void DisplayInventory();
+	void OpenInventory();
 	void CloseInventory();
 	void SetScrollBehaviour(bool ShouldStartScrolling, bool ShouldScrollLeft);
 	bool GetIsScrolling() { return bIsScrolling; }

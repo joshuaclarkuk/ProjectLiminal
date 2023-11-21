@@ -187,7 +187,7 @@ void AProjectLiminalCharacter::Inventory()
 {
 	if (PlayerState == EPS_Unoccupied)
 	{
-		InventoryComponent->DisplayInventory();
+		InventoryComponent->OpenInventory();
 	}
 	else if (PlayerState == EPS_InInventory)
 	{
