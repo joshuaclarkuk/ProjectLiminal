@@ -97,10 +97,10 @@ protected:
 	UInventoryComponent* InventoryComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
-	float MovementSpeedModifier = 1.0f;
+	float MovementSpeedModifier = 0.4f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Player Movement")
-	float FootstepAudioInterval = 1.0f;
+	float FootstepAudioInterval = 0.6f;
 
 	EPlayerStates PlayerState = EPlayerStates::EPS_Unoccupied;
 	AInteractableBase* CurrentInteractableObject;

@@ -129,6 +129,10 @@ void UInventoryComponent::SetScrollBehaviour(bool ShouldStartScrolling, bool Sho
 {
 	bIsScrollingLeft = ShouldScrollLeft;
 
+	// Re-initialise arrays
+	ItemStartingPositions.Empty();
+	ItemTargetPositions.Empty();
+
 	// Initialise starting positions
 	for (int i = 0; i < Items.Num(); i++)
 	{
