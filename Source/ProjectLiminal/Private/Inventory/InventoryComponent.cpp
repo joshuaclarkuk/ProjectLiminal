@@ -63,7 +63,7 @@ void UInventoryComponent::AddItemToInventory(AItemBase* Item)
 	}
 }
 
-void UInventoryComponent::DisplayInventory()
+void UInventoryComponent::OpenInventory()
 {
 	if (PlayerCharacter && PlayerCamera &&!Items.IsEmpty())
 	{
@@ -95,7 +95,6 @@ void UInventoryComponent::CloseInventory()
 		ScrollIndex = 0;
 		ItemStartingPositions.Empty();
 		ItemTargetPositions.Empty();
-		UE_LOG(LogTemp, Warning, TEXT("Inventory closed"));
 	}
 }
 
@@ -121,7 +120,6 @@ void UInventoryComponent::ScrollThroughItems(float DeltaTime)
 
 		if (CurrentPosition.Equals(ItemTargetPositions[i], 1.0f))
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Scrolling stopped"));
 			bShouldScroll = false;
 			bIsScrolling = false;
 		}
@@ -155,7 +153,6 @@ void UInventoryComponent::DetermineValidScroll()
 		}
 
 		ScrollIndex++;
-		UE_LOG(LogTemp, Warning, TEXT("ScrollIndex: %d"), ScrollIndex);
 	}
 	// Check there is an item to scroll to
 	else if (!bIsScrollingLeft && ScrollIndex > 0)
@@ -168,7 +165,6 @@ void UInventoryComponent::DetermineValidScroll()
 		}
 
 		ScrollIndex--;
-		UE_LOG(LogTemp, Warning, TEXT("ScrollIndex: %d"), ScrollIndex);
 	}
 	else
 	{
