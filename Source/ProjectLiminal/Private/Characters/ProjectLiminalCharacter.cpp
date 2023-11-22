@@ -13,6 +13,7 @@
 #include "Objects/UniqueObjects/CodeMachine.h"
 #include "Inventory/InventoryComponent.h"
 #include "Objects/UniqueObjects/TicketDispenser.h"
+#include "Kismet/GameplayStatics.h"
 
 //////////////////////////////////////////////////////////////////////////
 // AProjectLiminalCharacter
@@ -115,6 +116,10 @@ void AProjectLiminalCharacter::Move(const FInputActionValue& Value)
 	// Feels massively clumsy but can't think of a better way to tackle movement by interp right now
 	else if (PlayerState == EPS_InInventory && Controller && InventoryComponent && !InventoryComponent->GetIsScrolling())
 	{
+		// Protects against a bug where input on Y while scrolling caused the ScrollIndex to get confused
+		// Have given a degree of tolerance for gamepads, but might need to adjust in case value is too large
+		if (MovementVector.Y > 0.1f || MovementVector.Y < -0.1f) { return; }
+
 		if (MovementVector.X < 0.0f)
 		{
 			InventoryComponent->SetScrollBehaviour(true, true);
