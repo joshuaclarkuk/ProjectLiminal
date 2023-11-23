@@ -229,6 +229,9 @@ void AProjectLiminalCharacter::SweepForInteractable()
 
 			if (CurrentInteractableObject)
 			{
+				// Don't allow interaction if object has been "solved"
+				if (CurrentInteractableObject->GetHasBeenSolved()) { return; }
+
 				CurrentInteractableObject->SetInteractPromptVisibility(true);
 				InteractableObjectIsCodeMachine = Cast<ACodeMachine>(CurrentInteractableObject);
 				InteractableObjectIsTicketDispenser = Cast<ATicketDispenser>(CurrentInteractableObject);
@@ -249,6 +252,9 @@ void AProjectLiminalCharacter::SweepForInteractable()
 
 void AProjectLiminalCharacter::InteractWithObject()
 {
+	// Don't allow interaction if object has been "solved"
+	if (CurrentInteractableObject->GetHasBeenSolved()) { return; }
+
 	if (CurrentInteractableObject && PlayerState == EPS_Unoccupied)
 	{
 		PlayerState = EPS_Interacting;
@@ -257,8 +263,13 @@ void AProjectLiminalCharacter::InteractWithObject()
 	}
 	else if (CurrentInteractableObject && PlayerState == EPS_Interacting)
 	{
-		PlayerState = EPS_Unoccupied;
-		CurrentInteractableObject->SetInteractPromptVisibility(true);
-		CurrentInteractableObject->ReturnPlayerToFloor(this);
+		ExitFromInteraction();
 	}
+}
+
+void AProjectLiminalCharacter::ExitFromInteraction()
+{
+	PlayerState = EPS_Unoccupied;
+	CurrentInteractableObject->SetInteractPromptVisibility(true);
+	CurrentInteractableObject->ReturnPlayerToFloor(this);
 }

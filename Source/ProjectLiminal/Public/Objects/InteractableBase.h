@@ -52,4 +52,12 @@ protected:
 
 	UPROPERTY(EditAnywhere)
 	float CameraSnapSpeedInSeconds = 0.1f;
+
+	UPROPERTY(VisibleAnywhere, Category = "Interaction Config")
+	bool bHasBeenSolved = false;
+
+	/*GETTERS & SETTERS*/
+public:
+	bool GetHasBeenSolved() { return bHasBeenSolved; }
+	void SetHasBeenSolved(bool HasBeenSolved) { bHasBeenSolved = HasBeenSolved; }
 };

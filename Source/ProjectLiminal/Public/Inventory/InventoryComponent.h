@@ -70,4 +70,5 @@ public:
 	void CloseInventory();
 	void SetScrollBehaviour(bool ShouldStartScrolling, bool ShouldScrollLeft);
 	bool GetIsScrolling() { return bIsScrolling; }
+	TArray<AItemBase*> GetInventoryList() { return Items; }
 };

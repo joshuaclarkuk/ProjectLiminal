@@ -10,6 +10,9 @@ class AKeyboard;
 class UCodeComponent;
 class APressableButton;
 class UPointLightComponent;
+class AProjectLiminalCharacter;
+class UInventoryComponent;
+class AItemBase;
 
 /**
  * 
@@ -36,4 +39,12 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> ArrayOfAttachedButtons;
 	void ConstructPressableButtonArray();
+
+	UPROPERTY(EditAnywhere)
+	AItemBase* ItemRequiredToOpen;
+
+	AProjectLiminalCharacter* PlayerCharacter;
+	UInventoryComponent* InventoryComponent;
+
+
 };

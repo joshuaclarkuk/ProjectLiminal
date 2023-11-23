@@ -6,6 +6,10 @@
 #include "Objects/Codes/CodeComponent.h"
 #include "Objects/Codes/PressableButton.h"
 #include "Components/PointLightComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Inventory/InventoryComponent.h"
+#include "Characters/ProjectLiminalCharacter.h"
+#include "Inventory/Items/ItemBase.h"
 
 ACodeMachine::ACodeMachine()
 {
@@ -23,6 +27,13 @@ void ACodeMachine::BeginPlay()
 	Super::BeginPlay();
 
 	ConstructPressableButtonArray();
+
+	// Set up references to play and inventory to check whether player has required ticket to enter code
+	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
+	if (PlayerCharacter)
+	{
+		InventoryComponent = PlayerCharacter->GetComponentByClass<UInventoryComponent>();
+	}
 }
 
 void ACodeMachine::ConstructPressableButtonArray()
@@ -33,12 +44,29 @@ void ACodeMachine::ConstructPressableButtonArray()
 
 void ACodeMachine::PressButton(int32 ButtonArrayValue)
 {
-	if (ArrayOfAttachedButtons[ButtonArrayValue])
+	if (InventoryComponent)
 	{
-		APressableButton* PressableButton = CastChecked<APressableButton>(ArrayOfAttachedButtons[ButtonArrayValue]);
-		if (PressableButton)
+		bool bInventoryContainsItemToOpen = InventoryComponent->GetInventoryList().Contains(ItemRequiredToOpen);
+
+		if (bInventoryContainsItemToOpen)
 		{
-			PressableButton->TriggerButton(ButtonArrayValue);
+			if (ArrayOfAttachedButtons[ButtonArrayValue])
+			{
+				// Assign attached button to an array index (0-2)
+				APressableButton* PressableButton = CastChecked<APressableButton>(ArrayOfAttachedButtons[ButtonArrayValue]);
+				if (PressableButton)
+				{
+					PressableButton->TriggerButton(ButtonArrayValue);
+				}
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("No buttons attached to code machine"))
+			}
+		}
+		else
+		{
+			// Play error sound
 		}
 	}
 }

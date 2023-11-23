@@ -4,6 +4,9 @@
 #include "Objects/Codes/CodeComponent.h"
 #include "Components/PointLightComponent.h"
 #include "Components/MoveWithInterpComponent.h"
+#include "Characters/ProjectLiminalCharacter.h"
+#include "Kismet/GameplayStatics.h"
+#include "Objects/InteractableBase.h"
 
 
 // Sets default values for this component's properties
@@ -32,6 +35,8 @@ void UCodeComponent::BeginPlay()
 			DoorMovementComponents[i] = DoorActorReferences[i]->FindComponentByClass<UMoveWithInterpComponent>();
 		}
 	}
+
+	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 }
 
 void UCodeComponent::EnterDigitToCode(int32 i)
@@ -55,9 +60,17 @@ void UCodeComponent::CheckEnteredCode()
 			// Code executes on correct code entry
 			if (i == CodeToOpen.Num() - 1)
 			{
+				// Set "solved" boolean to true to prevent further interaction
+				AInteractableBase* OwningActor = Cast<AInteractableBase>(GetOwner());
+				if (OwningActor)
+				{
+					OwningActor->SetHasBeenSolved(true);
+				}
 				// Bool protects against multiple unlocks
 				bIsUnlocked = true;
 				UE_LOG(LogTemp, Warning, TEXT("Correct code entered! Unlocked"));
+
+				// Open ALL doors associated with machine
 				CodeIndicatorLight->SetLightColor(FLinearColor::Green);
 				for (int j = 0; j < DoorMovementComponents.Num(); j++)
 				{
@@ -65,6 +78,16 @@ void UCodeComponent::CheckEnteredCode()
 					{
 						DoorMovementComponents[j]->SetShouldRotate(true);
 					}
+				}
+
+				// Exit out of interaction
+				if (PlayerCharacter)
+				{
+					PlayerCharacter->ExitFromInteraction();
+				}
+				else
+				{
+					UE_LOG(LogTemp, Error, TEXT("Can't find %s"), *PlayerCharacter->GetName());
 				}
 			}
 		}

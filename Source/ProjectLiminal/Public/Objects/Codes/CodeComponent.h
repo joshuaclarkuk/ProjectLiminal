@@ -8,7 +8,8 @@
 
 class UPointLightComponent;
 class UMoveWithInterpComponent;
-
+class AProjectLiminalCharacter;
+class UInventoryComponent;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTLIMINAL_API UCodeComponent : public UActorComponent
@@ -37,6 +38,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<UMoveWithInterpComponent*> DoorMovementComponents;
+
+	UPROPERTY(VisibleAnywhere)
+	AProjectLiminalCharacter* PlayerCharacter;
 
 	UPointLightComponent* CodeIndicatorLight;
 

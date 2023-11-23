@@ -39,6 +39,8 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	USceneComponent* LocationToDisplayInventoryItem;
 
+	void ExitFromInteraction();
+
 protected:
 	virtual void BeginPlay();	
 
