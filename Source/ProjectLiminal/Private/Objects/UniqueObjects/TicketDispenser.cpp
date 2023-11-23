@@ -95,8 +95,8 @@ void ATicketDispenser::MovePlayerInFrontOfObject()
 			// TODO: Play ticket grab animation
 			PlayerInventory->AddItemToInventory(TicketItem);
 			TicketItem->ToggleVisibilityInGame(false);
+			bHasBeenSolved = true;
 		}
-
 		PlayerCharacter->EnableInput(LiminalPlayerController);
 	}
 }
