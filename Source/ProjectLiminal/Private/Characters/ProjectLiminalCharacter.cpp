@@ -252,11 +252,11 @@ void AProjectLiminalCharacter::SweepForInteractable()
 
 void AProjectLiminalCharacter::InteractWithObject()
 {
-	// Don't allow interaction if object has been "solved"
-	if (CurrentInteractableObject->GetHasBeenSolved()) { return; }
-
 	if (CurrentInteractableObject && PlayerState == EPS_Unoccupied)
 	{
+		// Don't allow interaction if object has been "solved"
+		if (CurrentInteractableObject->GetHasBeenSolved()) { return; }
+
 		PlayerState = EPS_Interacting;
 		CurrentInteractableObject->SetInteractPromptVisibility(false);
 		CurrentInteractableObject->MovePlayerInFrontOfObject();

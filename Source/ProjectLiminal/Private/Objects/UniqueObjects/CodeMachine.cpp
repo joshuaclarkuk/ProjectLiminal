@@ -10,6 +10,7 @@
 #include "Inventory/InventoryComponent.h"
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Inventory/Items/ItemBase.h"
+#include "Sound/SoundBase.h"
 
 ACodeMachine::ACodeMachine()
 {
@@ -48,7 +49,7 @@ void ACodeMachine::PressButton(int32 ButtonArrayValue)
 	{
 		bool bInventoryContainsItemToOpen = InventoryComponent->GetInventoryList().Contains(ItemRequiredToOpen);
 
-		if (bInventoryContainsItemToOpen)
+		if (bInventoryContainsItemToOpen || ItemRequiredToOpen == nullptr)
 		{
 			if (ArrayOfAttachedButtons[ButtonArrayValue])
 			{
@@ -67,6 +68,14 @@ void ACodeMachine::PressButton(int32 ButtonArrayValue)
 		else
 		{
 			// Play error sound
+			if (CorrectTicketMissingAudio)
+			{
+				UGameplayStatics::PlaySoundAtLocation(this, CorrectTicketMissingAudio, GetActorLocation());
+			}
+			else
+			{
+				UE_LOG(LogTemp, Error, TEXT("Cannot find audio in: %s"), *GetName());
+			}
 		}
 	}
 }

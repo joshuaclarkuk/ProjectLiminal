@@ -13,6 +13,7 @@ class UPointLightComponent;
 class AProjectLiminalCharacter;
 class UInventoryComponent;
 class AItemBase;
+class USoundBase;
 
 /**
  * 
@@ -35,6 +36,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UPointLightComponent* CodeIndicatorLight;
+
+	UPROPERTY(EditDefaultsOnly)
+	USoundBase* CorrectTicketMissingAudio;
 
 	UPROPERTY(VisibleAnywhere)
 	TArray<AActor*> ArrayOfAttachedButtons;
