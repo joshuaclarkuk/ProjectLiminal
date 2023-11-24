@@ -8,6 +8,8 @@
 
 class AProjectLiminalCharacter;
 class AProjectLiminalPlayerController;
+class APlayerHUD;
+class UOverlayWidget;
 class UCameraComponent;
 class AItemBase;
 
@@ -53,6 +55,8 @@ protected:
 
 	AProjectLiminalCharacter* PlayerCharacter;
 	AProjectLiminalPlayerController* LiminalPlayerController;
+	APlayerHUD* PlayerHUD;
+	UOverlayWidget* OverlayWidget;
 	UCameraComponent* PlayerCamera;
 
 	int32 ScrollIndex = 0;

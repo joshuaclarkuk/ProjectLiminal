@@ -10,6 +10,8 @@
 #include "Inventory/Items/Item_Ticket.h"
 #include "Components/StaticMeshComponent.h"
 #include "Math/UnrealMathUtility.h"
+#include "Config/PlayerHUD.h"
+#include "Config/OverlayWidget.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -29,6 +31,13 @@ void UInventoryComponent::BeginPlay()
 	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	LiminalPlayerController = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	PlayerCamera = PlayerCharacter->GetComponentByClass<UCameraComponent>();
+
+	// Get reference to inventory widget to display object name
+	PlayerHUD = Cast<APlayerHUD>(UGameplayStatics::GetPlayerController(this, 0)->GetHUD());
+	if (PlayerHUD)
+	{
+		OverlayWidget = PlayerHUD->GetOverlayWidget();
+	}
 }
 
 void UInventoryComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -60,6 +69,12 @@ void UInventoryComponent::AddItemToInventory(AItemBase* Item)
 		UE_LOG(LogTemp, Warning, TEXT("Item Added to Inventory: %s"), *Item->GetName());
 		Item->GetComponentByClass<UStaticMeshComponent>()->CastShadow = false;
 		Items.Add(Item);
+
+		// Display item picked up in overlay
+		if (OverlayWidget)
+		{
+			OverlayWidget->SetObjectNameText(Item->GetItemName());
+		}
 	}
 }
 

@@ -24,4 +24,8 @@ protected:
 
 	UPROPERTY()
 	UOverlayWidget* OverlayWidget;
+
+	/*GETTERS & SETTERS*/
+public:
+	UOverlayWidget* GetOverlayWidget() { return OverlayWidget; }
 };
