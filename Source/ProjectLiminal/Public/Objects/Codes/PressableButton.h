@@ -9,7 +9,6 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 class AInteractableBase;
-class UCodeComponent;
 class USoundBase;
 
 UCLASS()
@@ -42,7 +41,6 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "References")
 	AInteractableBase* InteractableObject;
 
-	UCodeComponent* CodeComponent;
 	FTimerHandle ButtonPushHandle;
 
 	bool bIsBeingDepressed = false;
@@ -52,6 +50,6 @@ protected:
 	FVector ButtonDepressedPosition;
 	float ButtonPushInterpSpeed = 20.0f;
 
-	void DepressButton(float DeltaTime);
-	void ReturnButtonToOriginalPosition(float DeltaTime);
+	void AnimateButtonPress(float DeltaTime);
+	void AnimateButtonRelease(float DeltaTime);
 };

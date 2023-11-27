@@ -20,7 +20,7 @@ public:
 	// Sets default values for this component's properties
 	UCodeComponent();
 
-	void EnterDigitToCode(int32 i);
+	void EnterDigitToCode(int32 DigitToAddToCode);
 
 protected:
 	virtual void BeginPlay() override;

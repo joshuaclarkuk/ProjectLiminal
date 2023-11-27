@@ -119,6 +119,7 @@ protected:
 	void PushLeftButton();
 	void PushMiddleButton();
 	void PushRightButton();
+	void ReleaseButton();
 	void Inventory();
 
 	void PlayFootstepAudio();

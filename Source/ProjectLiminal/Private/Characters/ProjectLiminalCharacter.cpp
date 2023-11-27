@@ -92,10 +92,13 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 		// Clicking
 		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Click);
 
-		// Pushing Interactable Buttons
+		// Pushing and Releasing Interactable Buttons
 		EnhancedInputComponent->BindAction(PushLeftButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushLeftButton);
 		EnhancedInputComponent->BindAction(PushMiddleButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushMiddleButton);
 		EnhancedInputComponent->BindAction(PushRightButtonAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushRightButton);
+		EnhancedInputComponent->BindAction(PushLeftButtonAction, ETriggerEvent::Completed, this, &AProjectLiminalCharacter::ReleaseButton);
+		EnhancedInputComponent->BindAction(PushMiddleButtonAction, ETriggerEvent::Completed, this, &AProjectLiminalCharacter::ReleaseButton);
+		EnhancedInputComponent->BindAction(PushRightButtonAction, ETriggerEvent::Completed, this, &AProjectLiminalCharacter::ReleaseButton);
 
 		// Inventory
 		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Inventory);
@@ -168,7 +171,7 @@ void AProjectLiminalCharacter::PushLeftButton()
 {
 	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
 	{
-		InteractableObjectIsCodeMachine->PressButton(0);
+		InteractableObjectIsCodeMachine->AttemptButtonPress(0);
 	}
 }
 
@@ -176,7 +179,7 @@ void AProjectLiminalCharacter::PushMiddleButton()
 {
 	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
 	{
-		InteractableObjectIsCodeMachine->PressButton(1);
+		InteractableObjectIsCodeMachine->AttemptButtonPress(1);
 	}
 }
 
@@ -184,7 +187,16 @@ void AProjectLiminalCharacter::PushRightButton()
 {
 	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
 	{
-		InteractableObjectIsCodeMachine->PressButton(2);
+		InteractableObjectIsCodeMachine->AttemptButtonPress(2);
+	}
+}
+
+void AProjectLiminalCharacter::ReleaseButton()
+{
+	// TODO: Need to add a delay so that this only triggers if player has held button for certain amount of time. Prevents accidental release
+	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
+	{
+		InteractableObjectIsCodeMachine->EnterDigitToCode();
 	}
 }
 

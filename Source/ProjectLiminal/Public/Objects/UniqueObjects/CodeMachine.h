@@ -26,7 +26,9 @@ class PROJECTLIMINAL_API ACodeMachine : public AInteractableBase
 public:
 	ACodeMachine();
 
-	void PressButton(int32 ButtonArrayValue);
+	void AttemptButtonPress(int32 ButtonArrayValue);
+	void RejectButtonPress();
+	void EnterDigitToCode();
 
 protected:
 	virtual void BeginPlay() override;
@@ -50,5 +52,9 @@ protected:
 	AProjectLiminalCharacter* PlayerCharacter;
 	UInventoryComponent* InventoryComponent;
 
+	int32 CodeValueToEnter = 0;
 
+	/*GETTERS & SETTERS*/
+public:
+	AItemBase* GetItemRequiredToOpen() { return ItemRequiredToOpen; }
 };

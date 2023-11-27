@@ -43,7 +43,7 @@ void ACodeMachine::ConstructPressableButtonArray()
 	GetAttachedActors(ArrayOfAttachedButtons);
 }
 
-void ACodeMachine::PressButton(int32 ButtonArrayValue)
+void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
 {
 	if (InventoryComponent)
 	{
@@ -58,11 +58,21 @@ void ACodeMachine::PressButton(int32 ButtonArrayValue)
 				if (PressableButton)
 				{
 					PressableButton->TriggerButton(ButtonArrayValue);
+
+					// Calculate value to add to code based on which button is pressed
+					int32 ValueToAdd = (ButtonArrayValue + 1) * 5;
+					CodeValueToEnter += ValueToAdd;
+
+					// Display code on screen
+					FString DigitBeingAdded = FString::Printf(TEXT("Code to be input: %d"), ValueToAdd);
+					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, DigitBeingAdded);					
+					FString TotalAmountToAdd = FString::Printf(TEXT("Total value is: %d"), CodeValueToEnter);
+					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TotalAmountToAdd);
 				}
 			}
 			else
 			{
-				UE_LOG(LogTemp, Warning, TEXT("No buttons attached to code machine"))
+				UE_LOG(LogTemp, Error, TEXT("No buttons attached to code machine"))
 			}
 		}
 		else
@@ -78,4 +88,27 @@ void ACodeMachine::PressButton(int32 ButtonArrayValue)
 			}
 		}
 	}
+}
+
+void ACodeMachine::RejectButtonPress()
+{
+	// Make light flash red
+	// Play rejection noise
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TEXT("Correct token needed"));
+}
+
+void ACodeMachine::EnterDigitToCode()
+{
+	// Protects against value being added when multiple notes are released
+	if (CodeValueToEnter == 0) { return; }
+
+	// Enter digit to code
+	CodeComponent->EnterDigitToCode(CodeValueToEnter);
+	FString DigitBeingAdded = FString::Printf(TEXT("Value added to code: %d"), CodeValueToEnter);
+	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Green, DigitBeingAdded);
+
+	// Clear digit so that player has to play new chord
+	CodeValueToEnter = 0;
+	UE_LOG(LogTemp, Warning, TEXT("CodeValueToEnter Has Been Reset To: %d"), CodeValueToEnter);
+
 }

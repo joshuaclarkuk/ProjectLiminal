@@ -5,7 +5,6 @@
 #include "Components/BoxComponent.h"
 #include "Components/StaticMeshComponent.h"
 #include "Objects/InteractableBase.h"
-#include "Objects/Codes/CodeComponent.h"
 #include "Sound/SoundBase.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -35,11 +34,6 @@ void APressableButton::BeginPlay()
 	ButtonStartRotation = GetActorRotation();
 
 	InteractableObject = Cast<AInteractableBase>(GetAttachParentActor());
-	
-	if (InteractableObject)
-	{
-		CodeComponent = InteractableObject->GetComponentByClass<UCodeComponent>();
-	}
 }
 
 // Called every frame
@@ -49,28 +43,31 @@ void APressableButton::Tick(float DeltaTime)
 
 	if (bIsBeingDepressed)
 	{
-		DepressButton(DeltaTime);
+		AnimateButtonPress(DeltaTime);
 	}
 	else if (bIsRising)
 	{
-		ReturnButtonToOriginalPosition(DeltaTime);
+		AnimateButtonRelease(DeltaTime);
 	}
 }
 
 void APressableButton::TriggerButton(int32 ButtonArrayValue)
 {
-	if (CodeComponent && !bIsBeingDepressed && !bIsRising)
+	if (!bIsBeingDepressed && !bIsRising)
 	{
 		bIsBeingDepressed = true;
-		CodeComponent->EnterDigitToCode(ButtonArrayValue);
 		if (SoundEffect)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, SoundEffect, GetActorLocation());
 		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Sound Effect Not Found On: %s"), *GetName());
+		}
 	}
 }
 
-void APressableButton::DepressButton(float DeltaTime)
+void APressableButton::AnimateButtonPress(float DeltaTime)
 {
 	FVector TargetLocation = ButtonStartPosition + FVector(0.0f, 0.0f, -2.0f);
 	FRotator TargetRotation = ButtonStartRotation + FRotator(-10.0f, 0.0f, 0.0f);
@@ -88,7 +85,7 @@ void APressableButton::DepressButton(float DeltaTime)
 	}
 }
 
-void APressableButton::ReturnButtonToOriginalPosition(float DeltaTime)
+void APressableButton::AnimateButtonRelease(float DeltaTime)
 {
 	FVector NewLocation = FMath::VInterpTo(GetActorLocation(), ButtonStartPosition, DeltaTime, ButtonPushInterpSpeed);
 	FRotator NewRotation = FMath::RInterpTo(GetActorRotation(), ButtonStartRotation, DeltaTime, ButtonPushInterpSpeed);
