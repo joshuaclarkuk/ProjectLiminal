@@ -60,14 +60,14 @@ void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
 					PressableButton->TriggerButton(ButtonArrayValue);
 
 					// Calculate value to add to code based on which button is pressed
-					int32 ValueToAdd = (ButtonArrayValue + 1) * 5;
+					int32 ValueToAdd = (ButtonArrayValue + 1 + (ButtonArrayValue * ButtonArrayValue));
 					CodeValueToEnter += ValueToAdd;
 
 					// Display code on screen
 					FString DigitBeingAdded = FString::Printf(TEXT("Code to be input: %d"), ValueToAdd);
 					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, DigitBeingAdded);					
 					FString TotalAmountToAdd = FString::Printf(TEXT("Total value is: %d"), CodeValueToEnter);
-					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Yellow, TotalAmountToAdd);
+					GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Orange, TotalAmountToAdd);
 				}
 			}
 			else

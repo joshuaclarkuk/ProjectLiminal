@@ -70,13 +70,16 @@ protected:
 	class UInputAction* ClickAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* PushLeftButtonAction;
+	class UInputAction* PushButtonOneAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* PushMiddleButtonAction;
+	class UInputAction* PushButtonTwoAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* PushRightButtonAction;
+	class UInputAction* PushButtonThreeAction;
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	class UInputAction* PushButtonFourAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InventoryAction;
@@ -116,9 +119,10 @@ protected:
 	void Look(const FInputActionValue& Value);
 	void Jump();
 	void Click();
-	void PushLeftButton();
-	void PushMiddleButton();
-	void PushRightButton();
+	void PushButtonOne();
+	void PushButtonTwo();
+	void PushButtonThree();
+	void PushButtonFour();
 	void ReleaseButton();
 	void Inventory();
 

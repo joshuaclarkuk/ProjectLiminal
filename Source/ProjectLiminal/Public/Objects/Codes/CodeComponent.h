@@ -11,6 +11,11 @@ class UMoveWithInterpComponent;
 class AProjectLiminalCharacter;
 class UInventoryComponent;
 
+UENUM()
+enum class Code {
+	// NEED TO CONSTRUCT ENUM SO THAT ONLY MULTIPLES AND ADDITIONS OF 1, 3, 7, 13 CAN BE ENTERED
+};
+
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class PROJECTLIMINAL_API UCodeComponent : public UActorComponent
 {
@@ -27,7 +32,7 @@ protected:
 
 	// Array to store the entered code
 	UPROPERTY(EditInstanceOnly)
-	TArray<int32> CodeToOpen{ 0,1,2 };
+	TArray<int32> CodeToOpen = { 0, 1, 2 };
 
 	// Array to store the entered code
 	UPROPERTY(VisibleInstanceOnly)
