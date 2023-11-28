@@ -11,6 +11,7 @@
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Inventory/Items/ItemBase.h"
 #include "Sound/SoundBase.h"
+#include "Objects/Codes/CodeSoundComponent.h"
 
 ACodeMachine::ACodeMachine()
 {

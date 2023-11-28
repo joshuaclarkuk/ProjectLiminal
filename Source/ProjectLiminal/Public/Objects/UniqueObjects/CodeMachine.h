@@ -14,6 +14,7 @@ class AProjectLiminalCharacter;
 class UInventoryComponent;
 class AItemBase;
 class USoundBase;
+class UCodeSoundComponent;
 
 /**
  * 
@@ -33,20 +34,23 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UCodeComponent* CodeComponent;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
+	UCodeSoundComponent* SoundComponent;
+
+	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UPointLightComponent* CodeIndicatorLight;
 
-	UPROPERTY(EditDefaultsOnly)
+	UPROPERTY(EditDefaultsOnly, Category = "CodeMachineConfig")
 	USoundBase* CorrectTicketMissingAudio;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	TArray<AActor*> ArrayOfAttachedButtons;
 	void ConstructPressableButtonArray();
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
 	AItemBase* ItemRequiredToOpen;
 
 	AProjectLiminalCharacter* PlayerCharacter;

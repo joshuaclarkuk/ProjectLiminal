@@ -14,21 +14,24 @@ class UInventoryComponent;
 UENUM()
 enum class ECodeValues {
 	// NEED TO CONSTRUCT ENUM SO THAT ONLY MULTIPLES AND ADDITIONS OF 1, 3, 7, 13 CAN BE ENTERED
-	ECS_One = 1,
-	ECS_Three = 3,
-	ECS_Four = 4,
-	ECS_Seven = 7,
-	ECS_Eight = 8,
-	ECS_Ten = 10,
-	ECS_Eleven = 11,
-	ECS_Thirteen = 13,
-	ECS_Fourteen = 14,
-	ECS_Sixteen = 16,
-	ECS_Seventeen = 17,
-	ECS_Twenty = 20,
-	ECS_TwentyOne = 21,
-	ECS_TwentyThree = 23,
-	ECS_TwentyFour = 24
+	ECS_One_Single = 1,
+	ECS_Three_Single = 3,
+	ECS_Seven_Single = 7,
+	ECS_Thirteen_Single = 13,
+
+	ECS_Four_Double = 4,
+	ECS_Eight_Double = 8,
+	ECS_Ten_Double = 10,
+	ECS_Fourteen_Double = 14,
+	ECS_Sixteen_Double = 16,
+	ECS_Twenty_Double = 20,
+
+	ECS_Eleven_Triple = 11,
+	ECS_Seventeen_Triple = 17,
+	ECS_TwentyOne_Triple = 21,
+	ECS_TwentyThree_Triple = 23,
+
+	ECS_TwentyFour_Quad = 24
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -47,7 +50,7 @@ protected:
 
 	// Array to store the entered code
 	UPROPERTY(EditInstanceOnly)
-	TArray<ECodeValues> CodeToOpen = { ECodeValues::ECS_One, ECodeValues::ECS_One, ECodeValues::ECS_One };
+	TArray<ECodeValues> CodeToOpen = { ECodeValues::ECS_One_Single, ECodeValues::ECS_One_Single, ECodeValues::ECS_One_Single };
 
 	// Array to store the entered code
 	UPROPERTY(VisibleInstanceOnly)
