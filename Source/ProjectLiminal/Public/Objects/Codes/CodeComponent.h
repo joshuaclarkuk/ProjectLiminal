@@ -16,8 +16,19 @@ enum class ECodeValues {
 	// NEED TO CONSTRUCT ENUM SO THAT ONLY MULTIPLES AND ADDITIONS OF 1, 3, 7, 13 CAN BE ENTERED
 	ECS_One = 1,
 	ECS_Three = 3,
+	ECS_Four = 4,
 	ECS_Seven = 7,
-	ECS_Thirteen = 13
+	ECS_Eight = 8,
+	ECS_Ten = 10,
+	ECS_Eleven = 11,
+	ECS_Thirteen = 13,
+	ECS_Fourteen = 14,
+	ECS_Sixteen = 16,
+	ECS_Seventeen = 17,
+	ECS_Twenty = 20,
+	ECS_TwentyOne = 21,
+	ECS_TwentyThree = 23,
+	ECS_TwentyFour = 24
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -36,7 +47,7 @@ protected:
 
 	// Array to store the entered code
 	UPROPERTY(EditInstanceOnly)
-	TArray<int32> CodeToOpen = { 0, 1, 2 };
+	TArray<ECodeValues> CodeToOpen = { ECodeValues::ECS_One, ECodeValues::ECS_One, ECodeValues::ECS_One };
 
 	// Array to store the entered code
 	UPROPERTY(VisibleInstanceOnly)

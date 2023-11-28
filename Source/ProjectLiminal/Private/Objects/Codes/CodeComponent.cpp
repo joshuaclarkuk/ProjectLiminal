@@ -52,7 +52,9 @@ void UCodeComponent::CheckEnteredCode()
 	// Need to check digit by digit as they are entered, as I'm using sounds rather than numerical codes
 	for (int32 i = 0; i < EnteredCode.Num(); i++)
 	{
-		if (EnteredCode[i] == CodeToOpen[i])
+		// Convert from enum to int32 and compare
+		int32 ExpectedValue = static_cast<int32>(CodeToOpen[i]);
+		if (EnteredCode[i] == ExpectedValue)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Correct number entered"));
 			UE_LOG(LogTemp, Warning, TEXT("Element %d: %d"), i, EnteredCode[i]);
