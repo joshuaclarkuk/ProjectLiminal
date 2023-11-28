@@ -11,11 +11,15 @@
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Inventory/Items/ItemBase.h"
 #include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 #include "Objects/Codes/CodeSoundComponent.h"
 
 ACodeMachine::ACodeMachine()
 {
 	CodeComponent = CreateDefaultSubobject<UCodeComponent>(TEXT("CodeComponent"));
+
+	InitialiseCodeSounds();
+	InitialiseAudioComponents();
 
 	CodeIndicatorLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("CodeIndicatorComponent"));
 	CodeIndicatorLight->SetupAttachment(ObjectMesh);
@@ -30,11 +34,54 @@ void ACodeMachine::BeginPlay()
 
 	ConstructPressableButtonArray();
 
+	// Stop keys all playing a sound on start
+	for (int i = 0; i < NumberOfAudioComponents; i++)
+	{
+		if (AudioComponents[i])
+		{
+			AudioComponents[i]->Stop();
+		}
+	}
+
 	// Set up references to play and inventory to check whether player has required ticket to enter code
 	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 	if (PlayerCharacter)
 	{
 		InventoryComponent = PlayerCharacter->GetComponentByClass<UInventoryComponent>();
+	}
+}
+
+void ACodeMachine::InitialiseCodeSounds()
+{
+	CodeSounds.SetNum(NumberOfAudioComponents);
+
+	// Assuming the sound path is correct
+	static ConstructorHelpers::FObjectFinder<USoundBase> SoundCueFinder(TEXT("/Game/Audio/SFX/Buttons/Alligator_Bass_Note_Cue.Alligator_Bass_Note_Cue"));
+
+	if (SoundCueFinder.Succeeded())
+	{
+		// The sound was found, assign it to all elements in the array
+		for (int32 i = 0; i < NumberOfAudioComponents; i++)
+		{
+			CodeSounds[i] = SoundCueFinder.Object;
+		}
+	}
+	else
+	{
+		// Handle the case where the sound was not found
+		UE_LOG(LogTemp, Error, TEXT("Sound not found!"));
+	}
+}
+
+void ACodeMachine::InitialiseAudioComponents()
+{
+	AudioComponents.SetNum(NumberOfAudioComponents);
+
+	for (int32 i = 0; i < NumberOfAudioComponents; i++)
+	{
+		FString AudioComponentName = FString::Printf(TEXT("AudioComponent_%d"), i);
+		AudioComponents[i] = CreateDefaultSubobject<UAudioComponent>(*AudioComponentName);
+		AudioComponents[i]->SetSound(CodeSounds[i]);
 	}
 }
 
@@ -58,11 +105,15 @@ void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
 				APressableButton* PressableButton = CastChecked<APressableButton>(ArrayOfAttachedButtons[ButtonArrayValue]);
 				if (PressableButton)
 				{
+					// Activate button animation
 					PressableButton->TriggerButton(ButtonArrayValue);
 
 					// Calculate value to add to code based on which button is pressed
 					int32 ValueToAdd = (ButtonArrayValue + 1 + (ButtonArrayValue * ButtonArrayValue));
 					CodeValueToEnter += ValueToAdd;
+
+					// Use total code value to determine which note/chord to play
+					SelectAndPlaySound(CodeValueToEnter);
 
 					// Display code on screen
 					FString DigitBeingAdded = FString::Printf(TEXT("Code to be input: %d"), ValueToAdd);
@@ -91,6 +142,42 @@ void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
 	}
 }
 
+void ACodeMachine::SelectAndPlaySound(int32 CodeValue)
+{
+	switch (CodeValue)
+	{
+	case 1:
+		UE_LOG(LogTemp, Warning, TEXT("Value is 1"));
+		AudioComponents[0]->Play();
+		break;
+
+	case 3:
+		UE_LOG(LogTemp, Warning, TEXT("Value is 3"));
+		AudioComponents[1]->Play();
+		break;
+
+	case 7:
+		UE_LOG(LogTemp, Warning, TEXT("Value is 7"));
+		AudioComponents[2]->Play();
+		break;
+
+	case 13:
+		UE_LOG(LogTemp, Warning, TEXT("Value is 13"));
+		AudioComponents[3]->Play();
+		break;
+
+	case 4:
+		UE_LOG(LogTemp, Warning, TEXT("Value is 4"));
+		AudioComponents[4]->Play();
+		break;
+
+	default:
+		// Code to execute if Value doesn't match any case
+		UE_LOG(LogTemp, Warning, TEXT("Value is not 1, 3, 7 or 13"));
+		break;
+	}
+}
+
 void ACodeMachine::RejectButtonPress()
 {
 	// Make light flash red
@@ -100,6 +187,9 @@ void ACodeMachine::RejectButtonPress()
 
 void ACodeMachine::EnterDigitToCode()
 {
+	// Raise keys via interpolation
+	// Raises all keys at once, even if being pressed. 
+	// This eliminates confusion with partial codes
 	for (int i = 0; i < ArrayOfAttachedButtons.Num(); i++)
 	{
 		APressableButton* PressableButton = Cast<APressableButton>(ArrayOfAttachedButtons[i]);

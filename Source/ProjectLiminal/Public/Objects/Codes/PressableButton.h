@@ -9,7 +9,6 @@
 class UBoxComponent;
 class UStaticMeshComponent;
 class AInteractableBase;
-class USoundBase;
 
 UCLASS()
 class PROJECTLIMINAL_API APressableButton : public AActor
@@ -34,9 +33,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere)
 	UStaticMeshComponent* ButtonMeshComponent;
-
-	UPROPERTY(EditAnywhere)
-	USoundBase* SoundEffect;
 
 	UPROPERTY(VisibleAnywhere, Category = "References")
 	AInteractableBase* InteractableObject;

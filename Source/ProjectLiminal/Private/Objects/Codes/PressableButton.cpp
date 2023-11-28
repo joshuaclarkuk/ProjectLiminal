@@ -20,8 +20,6 @@ APressableButton::APressableButton()
 	ButtonMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ButtonMeshComponent"));
 	ButtonMeshComponent->SetupAttachment(BoxCollider);
 	ButtonMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-
-	SoundEffect = CreateDefaultSubobject<USoundBase>(TEXT("ButtonPressSFX"));
 }
 
 // Called when the game starts or when spawned
@@ -56,14 +54,6 @@ void APressableButton::TriggerButton(int32 ButtonArrayValue)
 	if (!bButtonIsBeingDepressed && !bButtonIsRising)
 	{
 		bButtonIsBeingDepressed = true;
-		if (SoundEffect)
-		{
-			UGameplayStatics::PlaySoundAtLocation(this, SoundEffect, GetActorLocation());
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("Key Sound Effect Not Found On: %s"), *GetName());
-		}
 	}
 }
 

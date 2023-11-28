@@ -14,7 +14,7 @@ class AProjectLiminalCharacter;
 class UInventoryComponent;
 class AItemBase;
 class USoundBase;
-class UCodeSoundComponent;
+class UAudioComponent;
 
 /**
  * 
@@ -38,7 +38,12 @@ protected:
 	UCodeComponent* CodeComponent;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
-	UCodeSoundComponent* SoundComponent;
+	TArray<UAudioComponent*> AudioComponents;
+
+	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
+	TArray<USoundBase*> CodeSounds;
+
+	int32 NumberOfAudioComponents = 15;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UPointLightComponent* CodeIndicatorLight;
@@ -57,6 +62,10 @@ protected:
 	UInventoryComponent* InventoryComponent;
 
 	int32 CodeValueToEnter = 0;
+
+	void InitialiseCodeSounds();
+	void InitialiseAudioComponents();
+	void SelectAndPlaySound(int32 CodeValue);
 
 	/*GETTERS & SETTERS*/
 public:
