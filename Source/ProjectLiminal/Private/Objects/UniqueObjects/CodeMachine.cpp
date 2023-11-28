@@ -99,6 +99,15 @@ void ACodeMachine::RejectButtonPress()
 
 void ACodeMachine::EnterDigitToCode()
 {
+	for (int i = 0; i < ArrayOfAttachedButtons.Num(); i++)
+	{
+		APressableButton* PressableButton = Cast<APressableButton>(ArrayOfAttachedButtons[i]);
+		if (PressableButton)
+		{
+			PressableButton->SetButtonIsRising(true);
+		}
+	}
+
 	// Protects against value being added when multiple notes are released
 	if (CodeValueToEnter == 0) { return; }
 

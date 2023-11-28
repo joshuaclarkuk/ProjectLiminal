@@ -12,8 +12,12 @@ class AProjectLiminalCharacter;
 class UInventoryComponent;
 
 UENUM()
-enum class Code {
+enum class ECodeValues {
 	// NEED TO CONSTRUCT ENUM SO THAT ONLY MULTIPLES AND ADDITIONS OF 1, 3, 7, 13 CAN BE ENTERED
+	ECS_One = 1,
+	ECS_Three = 3,
+	ECS_Seven = 7,
+	ECS_Thirteen = 13
 };
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )

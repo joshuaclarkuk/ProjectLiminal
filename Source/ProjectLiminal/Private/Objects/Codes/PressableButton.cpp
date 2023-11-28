@@ -41,11 +41,11 @@ void APressableButton::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (bIsBeingDepressed)
+	if (bButtonIsBeingDepressed)
 	{
 		AnimateButtonPress(DeltaTime);
 	}
-	else if (bIsRising)
+	else if (bButtonIsRising)
 	{
 		AnimateButtonRelease(DeltaTime);
 	}
@@ -53,16 +53,16 @@ void APressableButton::Tick(float DeltaTime)
 
 void APressableButton::TriggerButton(int32 ButtonArrayValue)
 {
-	if (!bIsBeingDepressed && !bIsRising)
+	if (!bButtonIsBeingDepressed && !bButtonIsRising)
 	{
-		bIsBeingDepressed = true;
+		bButtonIsBeingDepressed = true;
 		if (SoundEffect)
 		{
 			UGameplayStatics::PlaySoundAtLocation(this, SoundEffect, GetActorLocation());
 		}
 		else
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Sound Effect Not Found On: %s"), *GetName());
+			UE_LOG(LogTemp, Error, TEXT("Key Sound Effect Not Found On: %s"), *GetName());
 		}
 	}
 }
@@ -80,8 +80,7 @@ void APressableButton::AnimateButtonPress(float DeltaTime)
 	// Disable
 	if (NewLocation.Equals(TargetLocation, 0.01f) && NewRotation.Equals(TargetRotation, 0.1f))
 	{
-		bIsBeingDepressed = false;
-		bIsRising = true;
+		bButtonIsBeingDepressed = false;
 	}
 }
 
@@ -94,6 +93,6 @@ void APressableButton::AnimateButtonRelease(float DeltaTime)
 
 	if (NewLocation.Equals(ButtonStartPosition, 0.01f) && NewRotation.Equals(ButtonStartRotation, 0.1f))
 	{
-		bIsRising = false;
+		bButtonIsRising = false;
 	}
 }

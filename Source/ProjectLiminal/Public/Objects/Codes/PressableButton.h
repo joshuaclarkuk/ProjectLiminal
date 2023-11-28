@@ -43,8 +43,8 @@ protected:
 
 	FTimerHandle ButtonPushHandle;
 
-	bool bIsBeingDepressed = false;
-	bool bIsRising = false;
+	bool bButtonIsBeingDepressed = false;
+	bool bButtonIsRising = false;
 	FVector ButtonStartPosition;
 	FRotator ButtonStartRotation;
 	FVector ButtonDepressedPosition;
@@ -52,4 +52,8 @@ protected:
 
 	void AnimateButtonPress(float DeltaTime);
 	void AnimateButtonRelease(float DeltaTime);
+
+	/*GETTERS & SETTERS*/
+public:
+	void SetButtonIsRising(bool ButtonIsRising) { bButtonIsRising = ButtonIsRising; }
 };
