@@ -10,7 +10,6 @@
 #include "Inventory/InventoryComponent.h"
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Inventory/Items/ItemBase.h"
-#include "Sound/SoundBase.h"
 #include "Components/AudioComponent.h"
 #include "Objects/Codes/CodeSoundComponent.h"
 
@@ -18,7 +17,9 @@ ACodeMachine::ACodeMachine()
 {
 	CodeComponent = CreateDefaultSubobject<UCodeComponent>(TEXT("CodeComponent"));
 
-	InitialiseCodeSounds();
+	AudioComponentHeader = CreateDefaultSubobject<USceneComponent>(TEXT("AudioComponentHeader"));
+	AudioComponentHeader->SetupAttachment(GetRootComponent());
+
 	InitialiseAudioComponents();
 
 	CodeIndicatorLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("CodeIndicatorComponent"));
@@ -51,28 +52,6 @@ void ACodeMachine::BeginPlay()
 	}
 }
 
-void ACodeMachine::InitialiseCodeSounds()
-{
-	CodeSounds.SetNum(NumberOfAudioComponents);
-
-	// Assuming the sound path is correct
-	static ConstructorHelpers::FObjectFinder<USoundBase> SoundCueFinder(TEXT("/Game/Audio/SFX/Buttons/Alligator_Bass_Note_Cue.Alligator_Bass_Note_Cue"));
-
-	if (SoundCueFinder.Succeeded())
-	{
-		// The sound was found, assign it to all elements in the array
-		for (int32 i = 0; i < NumberOfAudioComponents; i++)
-		{
-			CodeSounds[i] = SoundCueFinder.Object;
-		}
-	}
-	else
-	{
-		// Handle the case where the sound was not found
-		UE_LOG(LogTemp, Error, TEXT("Sound not found!"));
-	}
-}
-
 void ACodeMachine::InitialiseAudioComponents()
 {
 	AudioComponents.SetNum(NumberOfAudioComponents);
@@ -81,7 +60,7 @@ void ACodeMachine::InitialiseAudioComponents()
 	{
 		FString AudioComponentName = FString::Printf(TEXT("AudioComponent_%d"), i);
 		AudioComponents[i] = CreateDefaultSubobject<UAudioComponent>(*AudioComponentName);
-		AudioComponents[i]->SetSound(CodeSounds[i]);
+		AudioComponents[i]->SetupAttachment(AudioComponentHeader);
 	}
 }
 
@@ -113,7 +92,7 @@ void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
 					CodeValueToEnter += ValueToAdd;
 
 					// Use total code value to determine which note/chord to play
-					SelectAndPlaySound(CodeValueToEnter);
+					SelectSound(CodeValueToEnter);
 
 					// Display code on screen
 					FString DigitBeingAdded = FString::Printf(TEXT("Code to be input: %d"), ValueToAdd);
@@ -142,40 +121,90 @@ void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
 	}
 }
 
-void ACodeMachine::SelectAndPlaySound(int32 CodeValue)
+void ACodeMachine::SelectSound(int32 CodeValue)
 {
 	switch (CodeValue)
 	{
 	case 1:
-		UE_LOG(LogTemp, Warning, TEXT("Value is 1"));
-		AudioComponents[0]->Play();
+		PlaySound(CodeValue, 0);
 		break;
 
 	case 3:
-		UE_LOG(LogTemp, Warning, TEXT("Value is 3"));
-		AudioComponents[1]->Play();
+		PlaySound(CodeValue, 1);
 		break;
 
 	case 7:
-		UE_LOG(LogTemp, Warning, TEXT("Value is 7"));
-		AudioComponents[2]->Play();
+		PlaySound(CodeValue, 2);
 		break;
 
 	case 13:
-		UE_LOG(LogTemp, Warning, TEXT("Value is 13"));
-		AudioComponents[3]->Play();
+		PlaySound(CodeValue, 3);
 		break;
 
 	case 4:
-		UE_LOG(LogTemp, Warning, TEXT("Value is 4"));
-		AudioComponents[4]->Play();
+		PlaySound(CodeValue, 4);
+		break;
+
+	case 8:
+		PlaySound(CodeValue, 5);
+		break;
+
+	case 10:
+		PlaySound(CodeValue, 6);
+		break;
+
+	case 14:
+		PlaySound(CodeValue, 7);
+		break;
+
+	case 16:
+		PlaySound(CodeValue, 8);
+		break;
+
+	case 20:
+		PlaySound(CodeValue, 9);
+		break;
+
+	case 11:
+		PlaySound(CodeValue, 10);
+		break;
+
+	case 17:
+		PlaySound(CodeValue, 11);
+		break;
+
+	case 21:
+		PlaySound(CodeValue, 12);
+		break;
+
+	case 23:
+		PlaySound(CodeValue, 13);
+		break;
+
+	case 24:
+		PlaySound(CodeValue, 14);
 		break;
 
 	default:
-		// Code to execute if Value doesn't match any case
+		// Code to execute if CodeValue doesn't match any case
 		UE_LOG(LogTemp, Warning, TEXT("Value is not 1, 3, 7 or 13"));
 		break;
 	}
+}
+
+void ACodeMachine::PlaySound(int32 CodeValue, int32 AudioComponentIndex)
+{
+	UE_LOG(LogTemp, Warning, TEXT("CodeValue is: %d, AudioComponent is: %s"), CodeValue, *AudioComponents[AudioComponentIndex]->GetName());
+
+	// Fade out currently playing sounds before starting next sound
+	for (int i = 0; i < AudioComponents.Num(); i++)
+	{
+		AudioComponents[i]->FadeOut(SoundFadeOutTime, 0.0f);
+	}
+
+	// Activate audio component
+	AudioComponents[AudioComponentIndex]->FadeIn(SoundFadeInTime);
+
 }
 
 void ACodeMachine::RejectButtonPress()
@@ -197,6 +226,12 @@ void ACodeMachine::EnterDigitToCode()
 		{
 			PressableButton->SetButtonIsRising(true);
 		}
+	}
+
+	// Fades out all audio components
+	for (int i = 0; i < AudioComponents.Num(); i++)
+	{
+		AudioComponents[i]->FadeOut(SoundFadeOutTime, 0.0f);
 	}
 
 	// Protects against value being added when multiple notes are released
