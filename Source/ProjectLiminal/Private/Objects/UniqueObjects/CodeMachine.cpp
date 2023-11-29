@@ -85,6 +85,7 @@ void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
 				if (PressableButton)
 				{
 					// Activate button animation
+					// TODO: There's a bug where you can press the buttons before they've full risen and then don't press down, despite sound still working
 					PressableButton->TriggerButton(ButtonArrayValue);
 
 					// Calculate value to add to code based on which button is pressed

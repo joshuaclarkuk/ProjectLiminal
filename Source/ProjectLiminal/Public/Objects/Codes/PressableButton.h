@@ -37,6 +37,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "References")
 	AInteractableBase* InteractableObject;
 
+	UPROPERTY(EditAnywhere, Category = "Buttons")
+	float ButtonPushInterpSpeed = 50.0f;
+
 	FTimerHandle ButtonPushHandle;
 
 	bool bButtonIsBeingDepressed = false;
@@ -44,7 +47,6 @@ protected:
 	FVector ButtonStartPosition;
 	FRotator ButtonStartRotation;
 	FVector ButtonDepressedPosition;
-	float ButtonPushInterpSpeed = 20.0f;
 
 	void AnimateButtonPress(float DeltaTime);
 	void AnimateButtonRelease(float DeltaTime);
