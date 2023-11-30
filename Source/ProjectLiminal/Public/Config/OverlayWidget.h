@@ -21,8 +21,8 @@ protected:
 	UPROPERTY(meta = (BindWidget))
 	UTextBlock* ObjectNameText;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animations)
-	UWidgetAnimation* AnimationToPlay;
+	UPROPERTY(Transient, meta = (BindWidgetAnim))
+	UWidgetAnimation* ObjectNameAnimation;
 
 	void AnimateObjectName();
 

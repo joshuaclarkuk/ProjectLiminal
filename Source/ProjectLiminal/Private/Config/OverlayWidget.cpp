@@ -17,8 +17,8 @@ void UOverlayWidget::SetObjectNameText(FName ObjectName)
 
 void UOverlayWidget::AnimateObjectName()
 {
-	if (AnimationToPlay)
+	if (ObjectNameAnimation)
 	{
-		PlayAnimation(AnimationToPlay);
+		PlayAnimation(ObjectNameAnimation);
 	}
 }

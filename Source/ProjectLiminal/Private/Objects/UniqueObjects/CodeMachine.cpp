@@ -12,6 +12,8 @@
 #include "Inventory/Items/ItemBase.h"
 #include "Components/AudioComponent.h"
 #include "Objects/Codes/CodeSoundComponent.h"
+#include "Components/TextRenderComponent.h"
+#include "Materials/MaterialInstanceDynamic.h"
 
 ACodeMachine::ACodeMachine()
 {
@@ -21,6 +23,11 @@ ACodeMachine::ACodeMachine()
 	AudioComponentHeader->SetupAttachment(GetRootComponent());
 
 	InitialiseAudioComponents();
+
+	CodeSymbolHeader = CreateDefaultSubobject<USceneComponent>(TEXT("CodeSymbolHeader"));
+	CodeSymbolHeader->SetupAttachment(GetRootComponent());
+
+	InitialiseCodeSymbolsTextRenders();
 
 	CodeIndicatorLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("CodeIndicatorComponent"));
 	CodeIndicatorLight->SetupAttachment(ObjectMesh);
@@ -34,15 +41,8 @@ void ACodeMachine::BeginPlay()
 	Super::BeginPlay();
 
 	ConstructPressableButtonArray();
-
-	// Stop keys all playing a sound on start
-	for (int i = 0; i < NumberOfAudioComponents; i++)
-	{
-		if (AudioComponents[i])
-		{
-			AudioComponents[i]->FadeOut(0.0f, 0.0f);
-		}
-	}
+	SilenceAudioComponentsOnStart();
+	HideCodeSymbolsOnStart();
 
 	// Set up references to play and inventory to check whether player has required ticket to enter code
 	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
@@ -54,9 +54,9 @@ void ACodeMachine::BeginPlay()
 
 void ACodeMachine::InitialiseAudioComponents()
 {
-	AudioComponents.SetNum(NumberOfAudioComponents);
+	AudioComponents.SetNum(NumberOfButtonCombinations);
 
-	for (int32 i = 0; i < NumberOfAudioComponents; i++)
+	for (int32 i = 0; i < NumberOfButtonCombinations; i++)
 	{
 		FString AudioComponentName = FString::Printf(TEXT("AudioComponent_%d"), i);
 		AudioComponents[i] = CreateDefaultSubobject<UAudioComponent>(*AudioComponentName);
@@ -64,10 +64,46 @@ void ACodeMachine::InitialiseAudioComponents()
 	}
 }
 
+void ACodeMachine::InitialiseCodeSymbolsTextRenders()
+{
+	CodeSymbolTextRenders.SetNum(NumberOfButtonCombinations);
+
+	for (int32 i = 0; i < NumberOfButtonCombinations; i++)
+	{
+		FString TextRenderComponentName = FString::Printf(TEXT("CodeSymbol_%d"), i);
+		CodeSymbolTextRenders[i] = CreateDefaultSubobject<UTextRenderComponent>(*TextRenderComponentName);
+		CodeSymbolTextRenders[i]->SetupAttachment(CodeSymbolHeader);
+	}
+}
+
 void ACodeMachine::ConstructPressableButtonArray()
 {
 	// Get the array of child actors attached to this actor
 	GetAttachedActors(ArrayOfAttachedButtons);
+}
+
+void ACodeMachine::SilenceAudioComponentsOnStart()
+{
+	// Stop keys all playing a sound on start
+	for (int i = 0; i < NumberOfButtonCombinations; i++)
+	{
+		if (AudioComponents[i])
+		{
+			AudioComponents[i]->FadeOut(0.0f, 0.0f);
+		}
+	}
+}
+
+void ACodeMachine::HideCodeSymbolsOnStart()
+{
+	for (int i = 0; i < CodeSymbolTextRenders.Num(); i++)
+	{
+		if (CodeSymbolTextRenders[i])
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Hiding text: %s"), *CodeSymbolTextRenders[i]->GetName());
+			CodeSymbolTextRenders[i]->SetVisibility(false);
+		}
+	}
 }
 
 void ACodeMachine::AttemptButtonPress(int32 ButtonArrayValue)
@@ -127,63 +163,63 @@ void ACodeMachine::SelectSound(int32 CodeValue)
 	switch (CodeValue)
 	{
 	case 1:
-		PlaySound(CodeValue, 0);
+		PlaySoundAndDisplayGlyph(CodeValue, 0);
 		break;
 
 	case 3:
-		PlaySound(CodeValue, 1);
+		PlaySoundAndDisplayGlyph(CodeValue, 1);
 		break;
 
 	case 7:
-		PlaySound(CodeValue, 2);
+		PlaySoundAndDisplayGlyph(CodeValue, 2);
 		break;
 
 	case 13:
-		PlaySound(CodeValue, 3);
+		PlaySoundAndDisplayGlyph(CodeValue, 3);
 		break;
 
 	case 4:
-		PlaySound(CodeValue, 4);
+		PlaySoundAndDisplayGlyph(CodeValue, 4);
 		break;
 
 	case 8:
-		PlaySound(CodeValue, 5);
+		PlaySoundAndDisplayGlyph(CodeValue, 5);
 		break;
 
 	case 10:
-		PlaySound(CodeValue, 6);
+		PlaySoundAndDisplayGlyph(CodeValue, 6);
 		break;
 
 	case 14:
-		PlaySound(CodeValue, 7);
+		PlaySoundAndDisplayGlyph(CodeValue, 7);
 		break;
 
 	case 16:
-		PlaySound(CodeValue, 8);
+		PlaySoundAndDisplayGlyph(CodeValue, 8);
 		break;
 
 	case 20:
-		PlaySound(CodeValue, 9);
+		PlaySoundAndDisplayGlyph(CodeValue, 9);
 		break;
 
 	case 11:
-		PlaySound(CodeValue, 10);
+		PlaySoundAndDisplayGlyph(CodeValue, 10);
 		break;
 
 	case 17:
-		PlaySound(CodeValue, 11);
+		PlaySoundAndDisplayGlyph(CodeValue, 11);
 		break;
 
 	case 21:
-		PlaySound(CodeValue, 12);
+		PlaySoundAndDisplayGlyph(CodeValue, 12);
 		break;
 
 	case 23:
-		PlaySound(CodeValue, 13);
+		PlaySoundAndDisplayGlyph(CodeValue, 13);
 		break;
 
 	case 24:
-		PlaySound(CodeValue, 14);
+		PlaySoundAndDisplayGlyph(CodeValue, 14);
 		break;
 
 	default:
@@ -193,19 +229,39 @@ void ACodeMachine::SelectSound(int32 CodeValue)
 	}
 }
 
-void ACodeMachine::PlaySound(int32 CodeValue, int32 AudioComponentIndex)
+void ACodeMachine::PlaySoundAndDisplayGlyph(int32 CodeValue, int32 Index)
 {
-	UE_LOG(LogTemp, Warning, TEXT("CodeValue is: %d, AudioComponent is: %s"), CodeValue, *AudioComponents[AudioComponentIndex]->GetName());
+	UE_LOG(LogTemp, Warning, TEXT("CodeValue is: %d, AudioComponent is: %s"), CodeValue, *AudioComponents[Index]->GetName());
 
 	// Fade out currently playing sounds before starting next sound
 	for (int i = 0; i < AudioComponents.Num(); i++)
 	{
-		AudioComponents[i]->FadeOut(SoundFadeOutTime, 0.0f);
+		if (AudioComponents[i])
+		{
+			AudioComponents[i]->FadeOut(SoundFadeOutTime, 0.0f);
+		}
 	}
 
-	// Activate audio component
-	AudioComponents[AudioComponentIndex]->FadeIn(SoundFadeInTime);
+	// Fade out previous code symbol before displaying next one
+	for (int i = 0; i < CodeSymbolTextRenders.Num(); i++)
+	{
+		if (CodeSymbolTextRenders[i])
+		{
+			CodeSymbolTextRenders[i]->SetVisibility(false);
+		}
+	}
 
+	// Activate new audio component
+	if (AudioComponents[Index])
+	{
+		AudioComponents[Index]->FadeIn(SoundFadeInTime);
+	}
+
+	// Activate new code symbol
+	if (CodeSymbolTextRenders[Index])
+	{
+		CodeSymbolTextRenders[Index]->SetVisibility(true);
+	}
 }
 
 void ACodeMachine::RejectButtonPress()

@@ -14,6 +14,8 @@ class AProjectLiminalCharacter;
 class UInventoryComponent;
 class AItemBase;
 class UAudioComponent;
+class UTextRenderComponent;
+class UMaterialInstanceDynamic;
 
 /**
  * 
@@ -32,10 +34,11 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
-	virtual void MovePlayerInFrontOfObject() override;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UCodeComponent* CodeComponent;
+
+	int32 NumberOfButtonCombinations = 15;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	USceneComponent* AudioComponentHeader;
@@ -43,7 +46,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	TArray<UAudioComponent*> AudioComponents;
 
-	int32 NumberOfAudioComponents = 15;
+	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
+	USceneComponent* CodeSymbolHeader;
+
+	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
+	TArray<UTextRenderComponent*> CodeSymbolTextRenders;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UPointLightComponent* CodeIndicatorLight;
@@ -53,7 +60,6 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	TArray<AActor*> ArrayOfAttachedButtons;
-	void ConstructPressableButtonArray();
 
 	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
 	AItemBase* ItemRequiredToOpen;
@@ -70,8 +76,12 @@ protected:
 	int32 CodeValueToEnter = 0;
 
 	void InitialiseAudioComponents();
+	void InitialiseCodeSymbolsTextRenders();
+	void ConstructPressableButtonArray();
+	void SilenceAudioComponentsOnStart();
+	void HideCodeSymbolsOnStart();
 	void SelectSound(int32 CodeValue);
-	void PlaySound(int32 CodeValue, int32 AudioComponentIndex);
+	void PlaySoundAndDisplayGlyph(int32 CodeValue, int32 Index);
 
 	/*GETTERS & SETTERS*/
 public:
