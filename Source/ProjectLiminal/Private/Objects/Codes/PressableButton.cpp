@@ -55,6 +55,12 @@ void APressableButton::TriggerButton(int32 ButtonArrayValue)
 	{
 		bButtonIsBeingDepressed = true;
 	}
+	// Allows button press to be animated again, even if it's on the rise
+	else if (!bButtonIsBeingDepressed && bButtonIsRising)
+	{
+		bButtonIsBeingDepressed = true;
+		bButtonIsRising = false;
+	}
 }
 
 void APressableButton::AnimateButtonPress(float DeltaTime)

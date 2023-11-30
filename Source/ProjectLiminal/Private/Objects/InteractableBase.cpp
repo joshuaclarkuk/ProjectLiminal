@@ -82,5 +82,9 @@ void AInteractableBase::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 	if (PlayerController)
 	{
 		PlayerController->ZoomBackOutAndDisableMouse(Player, CameraSnapSpeedInSeconds);
+		if (bHasBeenSolved)
+		{
+			InteractPrompt->SetVisibility(false);
+		}
 	}
 }

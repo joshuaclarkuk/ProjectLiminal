@@ -40,7 +40,7 @@ void ACodeMachine::BeginPlay()
 	{
 		if (AudioComponents[i])
 		{
-			AudioComponents[i]->Stop();
+			AudioComponents[i]->FadeOut(0.0f, 0.0f);
 		}
 	}
 

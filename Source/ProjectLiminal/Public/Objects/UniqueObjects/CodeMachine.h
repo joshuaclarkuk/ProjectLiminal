@@ -32,6 +32,7 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void MovePlayerInFrontOfObject() override;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UCodeComponent* CodeComponent;
