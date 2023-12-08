@@ -15,7 +15,7 @@ class UInventoryComponent;
 class AItemBase;
 class UAudioComponent;
 class UTextRenderComponent;
-class UMaterialInstanceDynamic;
+class UNiagaraComponent;
 
 /**
  * 
@@ -34,6 +34,8 @@ public:
 
 protected:
 	virtual void BeginPlay() override;
+	virtual void MovePlayerInFrontOfObject() override;
+	virtual void ReturnPlayerToFloor(AProjectLiminalCharacter* Player) override;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UCodeComponent* CodeComponent;
@@ -51,6 +53,21 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
 	TArray<UTextRenderComponent*> CodeSymbolTextRenders;
+
+	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
+	USceneComponent* CodeSymbolStaticMeshHeader;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CodeMachineConfig")
+	TArray<UStaticMeshComponent*> CodeSymbolStaticMeshes;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CodeMachineConfig")
+	UStaticMeshComponent* ActiveSymbolStaticMesh;
+
+	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
+	UNiagaraComponent* KeyCodeAmbientParticles;
+
+	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
+	UNiagaraComponent* KeyCodeSymbolParticles;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UPointLightComponent* CodeIndicatorLight;
@@ -77,6 +94,7 @@ protected:
 
 	void InitialiseAudioComponents();
 	void InitialiseCodeSymbolsTextRenders();
+	void InitialiseCodeSymbolStaticMeshes();
 	void ConstructPressableButtonArray();
 	void SilenceAudioComponentsOnStart();
 	void HideCodeSymbolsOnStart();

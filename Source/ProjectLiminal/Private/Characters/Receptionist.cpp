@@ -18,7 +18,7 @@ AReceptionist::AReceptionist()
 	ReceptionistBodyMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	BlackSmokeEffect = CreateDefaultSubobject<UNiagaraComponent>(TEXT("BlackSmokeEffect"));
-	BlackSmokeEffect->SetupAttachment(ReceptionistBodyMesh);
+	BlackSmokeEffect->SetupAttachment(ReceptionistSceneComponent);
 }
 
 // Called when the game starts or when spawned

@@ -13,7 +13,8 @@
 #include "Components/AudioComponent.h"
 #include "Objects/Codes/CodeSoundComponent.h"
 #include "Components/TextRenderComponent.h"
-#include "Materials/MaterialInstanceDynamic.h"
+#include "NiagaraComponent.h"
+
 
 ACodeMachine::ACodeMachine()
 {
@@ -28,6 +29,21 @@ ACodeMachine::ACodeMachine()
 	CodeSymbolHeader->SetupAttachment(GetRootComponent());
 
 	InitialiseCodeSymbolsTextRenders();
+
+	CodeSymbolStaticMeshHeader = CreateDefaultSubobject<USceneComponent>(TEXT("CodeSymbolStaticMeshHeader"));
+	CodeSymbolStaticMeshHeader->SetupAttachment(GetRootComponent());
+
+	InitialiseCodeSymbolStaticMeshes();
+
+	ActiveSymbolStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ActiveSymbolStaticMesh"));
+	ActiveSymbolStaticMesh->SetupAttachment(GetRootComponent());
+	ActiveSymbolStaticMesh->SetVisibility(false);
+
+	KeyCodeAmbientParticles = CreateDefaultSubobject<UNiagaraComponent>(TEXT("KeyCodeAmbientParticles"));
+	KeyCodeAmbientParticles->SetupAttachment(GetRootComponent());
+
+	KeyCodeSymbolParticles = CreateDefaultSubobject<UNiagaraComponent>(TEXT("KeyCodeSymbolParticles"));
+	KeyCodeSymbolParticles->SetupAttachment(ActiveSymbolStaticMesh);
 
 	CodeIndicatorLight = CreateDefaultSubobject<UPointLightComponent>(TEXT("CodeIndicatorComponent"));
 	CodeIndicatorLight->SetupAttachment(ObjectMesh);
@@ -49,6 +65,37 @@ void ACodeMachine::BeginPlay()
 	if (PlayerCharacter)
 	{
 		InventoryComponent = PlayerCharacter->GetComponentByClass<UInventoryComponent>();
+	}
+
+	// Make sure particles don't start playing on start
+	KeyCodeAmbientParticles->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+	KeyCodeAmbientParticles->SetRelativeLocation(FVector(20.0f, 0.0f, 10.0f));
+	KeyCodeAmbientParticles->Deactivate();
+}
+
+void ACodeMachine::MovePlayerInFrontOfObject()
+{
+	Super::MovePlayerInFrontOfObject();
+
+	// "Wakes Up" audio components so the sound fades in on first key press. Sounds jarring otherwise.
+	for (UAudioComponent* AudioComponent : AudioComponents)
+	{
+		if (AudioComponent)
+		{
+			AudioComponent->FadeIn(0.0f, 0.0f);
+		}
+	 }
+}
+
+void ACodeMachine::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
+{
+	Super::ReturnPlayerToFloor(Player);
+	for (UAudioComponent* AudioComponent : AudioComponents)
+	{
+		if (AudioComponent)
+		{
+			AudioComponent->FadeOut(SoundFadeOutTime, 0.0f);
+		}
 	}
 }
 
@@ -73,6 +120,18 @@ void ACodeMachine::InitialiseCodeSymbolsTextRenders()
 		FString TextRenderComponentName = FString::Printf(TEXT("CodeSymbol_%d"), i);
 		CodeSymbolTextRenders[i] = CreateDefaultSubobject<UTextRenderComponent>(*TextRenderComponentName);
 		CodeSymbolTextRenders[i]->SetupAttachment(CodeSymbolHeader);
+	}
+}
+
+void ACodeMachine::InitialiseCodeSymbolStaticMeshes()
+{
+	CodeSymbolStaticMeshes.SetNum(NumberOfButtonCombinations);
+
+	for (int32 i = 0; i < NumberOfButtonCombinations; i++)
+	{
+		FString StaticMeshComponentName = FString::Printf(TEXT("CodeSymbolStaticMesh_%d"), i);
+		CodeSymbolStaticMeshes[i] = CreateDefaultSubobject<UStaticMeshComponent>(*StaticMeshComponentName);
+		CodeSymbolStaticMeshes[i]->SetupAttachment(CodeSymbolStaticMeshHeader);
 	}
 }
 
@@ -262,6 +321,18 @@ void ACodeMachine::PlaySoundAndDisplayGlyph(int32 CodeValue, int32 Index)
 	{
 		CodeSymbolTextRenders[Index]->SetVisibility(true);
 	}
+
+	if (ActiveSymbolStaticMesh && CodeSymbolStaticMeshes[Index])
+	{
+		ActiveSymbolStaticMesh->SetStaticMesh(CodeSymbolStaticMeshes[Index]->GetStaticMesh());
+		ActiveSymbolStaticMesh->SetVisibility(false);
+	}
+
+	// Play Niagara Systems
+	if (KeyCodeAmbientParticles)
+	{
+		KeyCodeAmbientParticles->SetActive(true);
+	}
 }
 
 void ACodeMachine::RejectButtonPress()
@@ -290,6 +361,9 @@ void ACodeMachine::EnterDigitToCode()
 	{
 		AudioComponents[i]->FadeOut(SoundFadeOutTime, 0.0f);
 	}
+
+	// Deactivates Particle System effect
+	KeyCodeAmbientParticles->SetActive(false);
 
 	// Protects against value being added when multiple notes are released
 	if (CodeValueToEnter == 0) { return; }
