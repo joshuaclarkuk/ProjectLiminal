@@ -107,6 +107,8 @@ void ACodeMachine::InitialiseCodeSymbolStaticMeshes()
 {
 	ActiveSymbolStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ActiveSymbolStaticMesh"));
 	ActiveSymbolStaticMesh->SetupAttachment(GetRootComponent());
+	ActiveSymbolStaticMesh->SetRelativeLocation(FVector(9.0f, 0.0f, 12.0f));
+	ActiveSymbolStaticMesh->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
 	ActiveSymbolStaticMesh->SetVisibility(false);
 
 	CodeSymbolHeader = CreateDefaultSubobject<USceneComponent>(TEXT("CodeSymbolHeader"));
@@ -254,8 +256,6 @@ void ACodeMachine::SelectSound(int32 CodeValue)
 
 void ACodeMachine::PlaySoundAndDisplayGlyph(int32 CodeValue, int32 Index)
 {
-	UE_LOG(LogTemp, Warning, TEXT("CodeValue is: %d, AudioComponent is: %s"), CodeValue, *AudioComponents[Index]->GetName());
-
 	// Fade out currently playing sounds before starting next sound
 	for (int i = 0; i < AudioComponents.Num(); i++)
 	{
