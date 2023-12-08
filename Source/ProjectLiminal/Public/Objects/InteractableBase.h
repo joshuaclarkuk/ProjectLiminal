@@ -42,9 +42,6 @@ protected:
 	UBoxComponent* BoxCollider;
 
 	UPROPERTY(EditAnywhere)
-	USceneComponent* CameraLockPosition;
-
-	UPROPERTY(EditAnywhere)
 	UCameraComponent* InteractCamera;
 
 	UPROPERTY(EditAnywhere)

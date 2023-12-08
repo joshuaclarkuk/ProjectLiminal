@@ -52,9 +52,13 @@ void ACodeMachine::BeginPlay()
 	}
 
 	// Make sure particles don't start playing on start
-	KeyCodeAmbientParticles->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
-	KeyCodeAmbientParticles->SetRelativeLocation(FVector(20.0f, 0.0f, 10.0f));
-	KeyCodeAmbientParticles->Deactivate();
+	if (KeyCodeAmbientParticles && KeyCodeSymbolParticles)
+	{
+		KeyCodeAmbientParticles->SetRelativeRotation(FRotator(90.0f, 0.0f, 0.0f));
+		KeyCodeAmbientParticles->SetRelativeLocation(FVector(20.0f, 0.0f, 10.0f));
+		KeyCodeAmbientParticles->Deactivate();
+		KeyCodeSymbolParticles->Deactivate();
+	}
 }
 
 void ACodeMachine::InitialiseButtonPlacement()
@@ -107,7 +111,7 @@ void ACodeMachine::InitialiseCodeSymbolStaticMeshes()
 {
 	ActiveSymbolStaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ActiveSymbolStaticMesh"));
 	ActiveSymbolStaticMesh->SetupAttachment(GetRootComponent());
-	ActiveSymbolStaticMesh->SetRelativeLocation(FVector(9.0f, 0.0f, 12.0f));
+	ActiveSymbolStaticMesh->SetRelativeLocation(FVector(9.0f, 0.0f, 8.0f));
 	ActiveSymbolStaticMesh->SetRelativeRotation(FRotator(0.0f, 0.0f, -90.0f));
 	ActiveSymbolStaticMesh->SetVisibility(false);
 
@@ -279,9 +283,10 @@ void ACodeMachine::PlaySoundAndDisplayGlyph(int32 CodeValue, int32 Index)
 	}
 
 	// Play Niagara Systems
-	if (KeyCodeAmbientParticles)
+	if (KeyCodeAmbientParticles && KeyCodeSymbolParticles)
 	{
 		KeyCodeAmbientParticles->SetActive(true);
+		KeyCodeSymbolParticles->SetActive(true);
 	}
 }
 
@@ -314,6 +319,7 @@ void ACodeMachine::EnterDigitToCode()
 
 	// Deactivates Particle System effect
 	KeyCodeAmbientParticles->SetActive(false);
+	KeyCodeSymbolParticles->SetActive(false);
 
 	// Protects against value being added when multiple notes are released
 	if (CodeValueToEnter == 0) { return; }

@@ -49,9 +49,6 @@ AInteractableBase::AInteractableBase()
 
 	InteractCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("InteractCamera"));
 	InteractCamera->SetupAttachment(InteractCamSpringArm);
-
-	CameraLockPosition = CreateDefaultSubobject<USceneComponent>(TEXT("CameraLockPosition"));
-	CameraLockPosition->SetupAttachment(BoxCollider);
 }
 
 // Called when the game starts or when spawned
