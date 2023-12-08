@@ -76,10 +76,6 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(PlayerInputComponent))
 	{
-		//Jumping
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Triggered, this, &ACharacter::Jump);
-		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
-
 		//Moving
 		EnhancedInputComponent->BindAction(MoveAction, ETriggerEvent::Triggered, this, &AProjectLiminalCharacter::Move);
 
@@ -89,18 +85,13 @@ void AProjectLiminalCharacter::SetupPlayerInputComponent(class UInputComponent* 
 		// Interacting
 		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::InteractWithObject);
 
-		// Clicking
-		EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Click);
-
 		// Pushing and Releasing Interactable Buttons
 		EnhancedInputComponent->BindAction(PushButtonOneAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushButtonOne);
 		EnhancedInputComponent->BindAction(PushButtonTwoAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushButtonTwo);
 		EnhancedInputComponent->BindAction(PushButtonThreeAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushButtonThree);
-		EnhancedInputComponent->BindAction(PushButtonFourAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::PushButtonFour);
 		EnhancedInputComponent->BindAction(PushButtonOneAction, ETriggerEvent::Completed, this, &AProjectLiminalCharacter::ReleaseButton);
 		EnhancedInputComponent->BindAction(PushButtonTwoAction, ETriggerEvent::Completed, this, &AProjectLiminalCharacter::ReleaseButton);
 		EnhancedInputComponent->BindAction(PushButtonThreeAction, ETriggerEvent::Completed, this, &AProjectLiminalCharacter::ReleaseButton);
-		EnhancedInputComponent->BindAction(PushButtonFourAction, ETriggerEvent::Completed, this, &AProjectLiminalCharacter::ReleaseButton);
 
 		// Inventory
 		EnhancedInputComponent->BindAction(InventoryAction, ETriggerEvent::Started, this, &AProjectLiminalCharacter::Inventory);
@@ -156,19 +147,6 @@ void AProjectLiminalCharacter::Look(const FInputActionValue& Value)
 	}
 }
 
-void AProjectLiminalCharacter::Jump()
-{
-	if (PlayerState == EPS_Unoccupied)
-	{
-		ACharacter::Jump();
-	}
-}
-
-void AProjectLiminalCharacter::Click()
-{
-
-}
-
 void AProjectLiminalCharacter::PushButtonOne()
 {
 	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
@@ -190,14 +168,6 @@ void AProjectLiminalCharacter::PushButtonThree()
 	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
 	{
 		InteractableObjectIsCodeMachine->AttemptButtonPress(2);
-	}
-}
-
-void AProjectLiminalCharacter::PushButtonFour()
-{
-	if (PlayerState == EPS_Interacting && InteractableObjectIsCodeMachine)
-	{
-		InteractableObjectIsCodeMachine->AttemptButtonPress(3);
 	}
 }
 

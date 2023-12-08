@@ -50,10 +50,6 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputMappingContext* DefaultMappingContext;
 
-	/** Jump Input Action */
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* JumpAction;
-
 	/** Interact Input Action */
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InteractAction;
@@ -67,9 +63,6 @@ protected:
 	class UInputAction* LookAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* ClickAction;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* PushButtonOneAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -77,9 +70,6 @@ protected:
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* PushButtonThreeAction;
-
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	class UInputAction* PushButtonFourAction;
 
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	class UInputAction* InventoryAction;
@@ -117,12 +107,9 @@ protected:
 
 	void Move(const FInputActionValue& Value);
 	void Look(const FInputActionValue& Value);
-	void Jump();
-	void Click();
 	void PushButtonOne();
 	void PushButtonTwo();
 	void PushButtonThree();
-	void PushButtonFour();
 	void ReleaseButton();
 	void Inventory();
 

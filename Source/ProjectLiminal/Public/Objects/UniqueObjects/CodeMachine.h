@@ -40,7 +40,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	UCodeComponent* CodeComponent;
 
-	int32 NumberOfButtonCombinations = 15;
+	int32 NumberOfButtonCombinations = 7;
 
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	USceneComponent* AudioComponentHeader;
@@ -51,14 +51,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
 	USceneComponent* CodeSymbolHeader;
 
-	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
-	TArray<UTextRenderComponent*> CodeSymbolTextRenders;
-
-	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
-	USceneComponent* CodeSymbolStaticMeshHeader;
-
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CodeMachineConfig")
-	TArray<UStaticMeshComponent*> CodeSymbolStaticMeshes;
+	TArray<UStaticMeshComponent*> CodeSymbolMeshes;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "CodeMachineConfig")
 	UStaticMeshComponent* ActiveSymbolStaticMesh;
@@ -75,8 +69,17 @@ protected:
 	UPROPERTY(EditDefaultsOnly, Category = "CodeMachineConfig")
 	USoundWave* CorrectTicketMissingAudio;
 
+	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
+	USceneComponent* ButtonArrayHeader;
+
+	UPROPERTY(EditDefaultsOnly, Category = "CodeMachineConfig")
+	TSubclassOf<APressableButton> ButtonClassToSpawn;
+
 	UPROPERTY(VisibleAnywhere, Category = "CodeMachineConfig")
-	TArray<AActor*> ArrayOfAttachedButtons;
+	TArray<APressableButton*> ArrayOfAttachedButtons;
+
+	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
+	TArray<USceneComponent*> ButtonSpawnLocations;
 
 	UPROPERTY(EditAnywhere, Category = "CodeMachineConfig")
 	AItemBase* ItemRequiredToOpen;
@@ -90,14 +93,14 @@ protected:
 	AProjectLiminalCharacter* PlayerCharacter;
 	UInventoryComponent* InventoryComponent;
 
+	int32 NumberOfButtonsToSpawn = 3;
 	int32 CodeValueToEnter = 0;
 
+	void InitialiseButtonPlacement();
 	void InitialiseAudioComponents();
-	void InitialiseCodeSymbolsTextRenders();
 	void InitialiseCodeSymbolStaticMeshes();
 	void ConstructPressableButtonArray();
 	void SilenceAudioComponentsOnStart();
-	void HideCodeSymbolsOnStart();
 	void SelectSound(int32 CodeValue);
 	void PlaySoundAndDisplayGlyph(int32 CodeValue, int32 Index);
 
