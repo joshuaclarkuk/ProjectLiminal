@@ -24,12 +24,6 @@ void APeepHole::BeginPlay()
 
 	CameraComponent = GetComponentByClass<UCameraComponent>();
 	PlayerControllerRef = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-
-	if (PlayerControllerRef)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("Got player controller in Peephole"));
-	}
-
 	Torchlight->SetVisibility(false);
 }
 
