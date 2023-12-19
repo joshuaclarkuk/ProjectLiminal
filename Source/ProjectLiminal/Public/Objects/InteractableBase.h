@@ -25,7 +25,11 @@ public:
 	AInteractableBase();
 
 	virtual void SetInteractPromptVisibility(bool bVisible);
+
+	UFUNCTION(BlueprintCallable)
 	virtual void MovePlayerInFrontOfObject();
+
+	UFUNCTION(BlueprintCallable)
 	virtual void ReturnPlayerToFloor(AProjectLiminalCharacter* Player);
 
 protected:
@@ -50,11 +54,14 @@ protected:
 	UPROPERTY(EditAnywhere)
 	float CameraSnapSpeedInSeconds = 0.1f;
 
-	UPROPERTY(VisibleAnywhere, Category = "Interaction Config")
+	UPROPERTY(EditInstanceOnly, Category = "Interaction Config")
 	bool bHasBeenSolved = false;
 
 	/*GETTERS & SETTERS*/
 public:
+	UFUNCTION(BlueprintCallable)
 	bool GetHasBeenSolved() { return bHasBeenSolved; }
+
+	UFUNCTION(BlueprintCallable)
 	void SetHasBeenSolved(bool HasBeenSolved) { bHasBeenSolved = HasBeenSolved; }
 };

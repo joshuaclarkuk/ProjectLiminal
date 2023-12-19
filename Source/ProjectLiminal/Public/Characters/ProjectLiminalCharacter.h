@@ -39,6 +39,7 @@ public:
 	UPROPERTY(EditDefaultsOnly, Category = "Inventory")
 	USceneComponent* LocationToDisplayInventoryItem;
 
+	UFUNCTION(BlueprintCallable)
 	void ExitFromInteraction();
 
 protected:

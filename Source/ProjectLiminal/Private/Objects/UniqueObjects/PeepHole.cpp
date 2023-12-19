@@ -39,6 +39,7 @@ void APeepHole::Tick(float DeltaTime)
 		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 		FVector NewTorchLocation = FMath::VInterpTo(Torchlight->GetComponentLocation(), HitResult.ImpactPoint, DeltaTime, 10.0f);
 		Torchlight->SetWorldLocation(NewTorchLocation);
+		UE_LOG(LogTemp, Warning, TEXT("Difference between mouse and player vector: %s"), *(HitResult.ImpactPoint - CameraComponent->GetComponentLocation()).ToString());
 	}
 }
 
