@@ -13,6 +13,7 @@ class AProjectLiminalPlayerController;
 UENUM()
 enum EPeepHoleState {
 	EPS_NotActive,
+	EPS_ZoomingIn,
 	EPS_Active
 };
 
@@ -41,6 +42,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
 	float TorchlightAttenuationRadius = 100.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
+	float LookAroundInterpSpeed = 0.6f;
+
+	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
+	float MaxCameraMovementAngle = 5.0f;
 
 	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
 	float TorchlightTraceDistance = 200.0f;

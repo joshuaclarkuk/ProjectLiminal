@@ -39,7 +39,8 @@ void APeepHole::Tick(float DeltaTime)
 		PlayerControllerRef->GetHitResultUnderCursor(ECC_Visibility, false, HitResult);
 		FVector NewTorchLocation = FMath::VInterpTo(Torchlight->GetComponentLocation(), HitResult.ImpactPoint, DeltaTime, 10.0f);
 		Torchlight->SetWorldLocation(NewTorchLocation);
-		UE_LOG(LogTemp, Warning, TEXT("Difference between mouse and player vector: %s"), *(HitResult.ImpactPoint - CameraComponent->GetComponentLocation()).ToString());
+
+		RotateCameraWithinPeepHole(HitResult, DeltaTime);
 	}
 }
 
@@ -52,6 +53,20 @@ void APeepHole::MovePlayerInFrontOfObject()
 	{
 		Torchlight->SetVisibility(true);
 	}
+}
+
+void APeepHole::RotateCameraWithinPeepHole(FHitResult& HitResult, float DeltaTime)
+{
+	// Rotate camera towards the light (mouse's impact point) up to a maximum angle
+	FVector CameraLocation = CameraComponent->GetComponentLocation();
+	FRotator DesiredRotation = FRotationMatrix::MakeFromX(HitResult.ImpactPoint - CameraLocation).Rotator();
+
+	DesiredRotation.Pitch = FMath::ClampAngle(DesiredRotation.Pitch, -MaxCameraMovementAngle, MaxCameraMovementAngle);
+	DesiredRotation.Yaw = FMath::ClampAngle(DesiredRotation.Yaw, -MaxCameraMovementAngle, MaxCameraMovementAngle);
+
+	FRotator NewCameraRotation = FMath::RInterpTo(CameraComponent->GetComponentRotation(), DesiredRotation, DeltaTime, LookAroundInterpSpeed);
+
+	CameraComponent->SetWorldRotation(NewCameraRotation);
 }
 
 void APeepHole::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
