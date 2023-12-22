@@ -9,6 +9,8 @@
 class UPointLightComponent;
 class UCameraComponent;
 class AProjectLiminalPlayerController;
+class UAudioComponent;
+class USoundBase;
 
 UENUM()
 enum EPeepHoleState {
@@ -39,6 +41,9 @@ protected:
 	UPROPERTY(EditAnywhere)
 	UPointLightComponent* Torchlight;
 
+	UPROPERTY(EditAnywhere)
+	UAudioComponent* AudioComponent;
+
 	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
 	float TorchlightIntensity = 100.0f;
 
@@ -50,6 +55,9 @@ protected:
 
 	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
 	bool bTorchlightIsNeeded = false;
+
+	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
+	USoundBase* TorchClickSound;
 
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	FVector StartingCameraLocation;

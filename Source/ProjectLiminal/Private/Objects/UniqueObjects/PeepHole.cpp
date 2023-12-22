@@ -7,9 +7,15 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Config/ProjectLiminalPlayerController.h"
+#include "Sound/SoundBase.h"
+#include "Components/AudioComponent.h"
 
 APeepHole::APeepHole()
 {
+	AudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("TorchAudioComponent"));
+	AudioComponent->SetupAttachment(GetRootComponent());
+
+
 	Torchlight = CreateDefaultSubobject<UPointLightComponent>(TEXT("TorchLight"));
 	Torchlight->SetupAttachment(GetRootComponent());
 	Torchlight->SetIntensity(TorchlightIntensity);
@@ -26,10 +32,22 @@ void APeepHole::BeginPlay()
 
 	CameraComponent = GetComponentByClass<UCameraComponent>();
 	PlayerControllerRef = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
-	Torchlight->SetVisibility(false);
 
+	// Capture starting camera location for future use
 	StartingCameraLocation = CameraComponent->GetComponentLocation();
 	StartingCameraRotation = CameraComponent->GetComponentRotation();
+
+	// Assign torch click sound
+	if (TorchClickSound)
+	{
+		AudioComponent->SetSound(TorchClickSound);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("Could not find torch click sound. Please reassign"));
+	}
+
+	Torchlight->SetVisibility(false);
 }
 
 void APeepHole::Tick(float DeltaTime)
@@ -41,9 +59,22 @@ void APeepHole::Tick(float DeltaTime)
 		float NewSpringArmLocation = FMath::FInterpTo(CurrentSpringArmLength, ZoomedInSpringArmLength, DeltaTime, ZoomSpeed);
 		InteractCamSpringArm->TargetArmLength = NewSpringArmLocation;
 
-		if (InteractCamSpringArm->TargetArmLength == ZoomedInSpringArmLength)
+		if (InteractCamSpringArm->TargetArmLength <= ZoomedInSpringArmLength * 0.1)
 		{
 			PeepHoleState = EPS_Active;
+
+			if (bTorchlightIsNeeded)
+			{
+				// Play sound effect
+				if (TorchClickSound && AudioComponent)
+				{
+					AudioComponent->Play();
+				}
+
+				// Display light
+				Torchlight->SetVisibility(true);
+
+			}
 		}
 	}
 
@@ -67,24 +98,20 @@ void APeepHole::MovePlayerInFrontOfObject()
 	Super::MovePlayerInFrontOfObject();
 
 	PeepHoleState = EPS_ZoomingIn;
-	if (bTorchlightIsNeeded)
-	{
-		Torchlight->SetVisibility(true);
-	}
 }
 
 void APeepHole::RotateCameraWithinPeepHole(FHitResult& HitResult, float DeltaTime)
 {
 	// Rotate camera towards the light (mouse's impact point) up to a maximum angle
-	FVector CameraLocation = CameraComponent->GetComponentLocation();
-	FRotator DesiredRotation = FRotationMatrix::MakeFromX(HitResult.ImpactPoint - CameraLocation).Rotator();
+	FVector SpringArmLocation = InteractCamSpringArm->GetComponentLocation();
+	FRotator DesiredRotation = FRotationMatrix::MakeFromX(HitResult.ImpactPoint - SpringArmLocation).Rotator();
 
 	DesiredRotation.Pitch = FMath::ClampAngle(DesiredRotation.Pitch, -MaxCameraMovementAngle, MaxCameraMovementAngle);
 	DesiredRotation.Yaw = FMath::ClampAngle(DesiredRotation.Yaw, -MaxCameraMovementAngle, MaxCameraMovementAngle);
 
-	FRotator NewCameraRotation = FMath::RInterpTo(CameraComponent->GetComponentRotation(), DesiredRotation, DeltaTime, LookAroundInterpSpeed);
+	FRotator NewCameraRotation = FMath::RInterpTo(InteractCamSpringArm->GetComponentRotation(), DesiredRotation, DeltaTime, LookAroundInterpSpeed);
 
-	CameraComponent->SetWorldRotation(NewCameraRotation);
+	InteractCamSpringArm->SetWorldRotation(NewCameraRotation);
 }
 
 void APeepHole::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
