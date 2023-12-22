@@ -29,6 +29,8 @@ public:
 	APeepHole();
 	virtual void Tick(float DeltaTime) override;
 
+	void RotateCameraWithinPeepHole(FHitResult& HitResult, float DeltaTime);
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void MovePlayerInFrontOfObject() override;
@@ -43,17 +45,32 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
 	float TorchlightAttenuationRadius = 100.0f;
 
-	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
-	float LookAroundInterpSpeed = 0.6f;
-
-	UPROPERTY(EditAnywhere, Category = "Torchlight Settings")
-	float MaxCameraMovementAngle = 5.0f;
-
 	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
 	float TorchlightTraceDistance = 200.0f;
 
 	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
 	bool bTorchlightIsNeeded = false;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	FVector StartingCameraLocation;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	FRotator StartingCameraRotation;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float LookAroundInterpSpeed = 0.6f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float MaxCameraMovementAngle = 5.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float StartingSpringArmLength = 32.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float ZoomedInSpringArmLength = -1.0f;
+
+	UPROPERTY(EditAnywhere, Category = "Camera Settings")
+	float ZoomSpeed = 3.0f;
 
 	EPeepHoleState PeepHoleState = EPeepHoleState::EPS_NotActive;
 	AProjectLiminalPlayerController* PlayerControllerRef;

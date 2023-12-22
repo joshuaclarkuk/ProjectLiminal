@@ -5,6 +5,7 @@
 #include "Components/PointLightComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Camera/CameraComponent.h"
+#include "GameFramework/SpringArmComponent.h"
 #include "Config/ProjectLiminalPlayerController.h"
 
 APeepHole::APeepHole()
@@ -16,6 +17,7 @@ APeepHole::APeepHole()
 	Torchlight->SetSourceRadius(50.0f);
 	Torchlight->SetSoftSourceRadius(20.0f);
 
+	InteractCamSpringArm->TargetArmLength = StartingSpringArmLength;
 }
 
 void APeepHole::BeginPlay()
@@ -25,10 +27,26 @@ void APeepHole::BeginPlay()
 	CameraComponent = GetComponentByClass<UCameraComponent>();
 	PlayerControllerRef = Cast<AProjectLiminalPlayerController>(UGameplayStatics::GetPlayerController(this, 0));
 	Torchlight->SetVisibility(false);
+
+	StartingCameraLocation = CameraComponent->GetComponentLocation();
+	StartingCameraRotation = CameraComponent->GetComponentRotation();
 }
 
 void APeepHole::Tick(float DeltaTime)
 {
+	// Only ticks if player is zooming into hole
+	if (PeepHoleState == EPS_ZoomingIn && InteractCamSpringArm)
+	{
+		float CurrentSpringArmLength = InteractCamSpringArm->TargetArmLength;
+		float NewSpringArmLocation = FMath::FInterpTo(CurrentSpringArmLength, ZoomedInSpringArmLength, DeltaTime, ZoomSpeed);
+		InteractCamSpringArm->TargetArmLength = NewSpringArmLocation;
+
+		if (InteractCamSpringArm->TargetArmLength == ZoomedInSpringArmLength)
+		{
+			PeepHoleState = EPS_Active;
+		}
+	}
+
 	// Only ticks if PeepHole is currently active
 	if (PeepHoleState == EPS_Active && PlayerControllerRef)
 	{
@@ -48,7 +66,7 @@ void APeepHole::MovePlayerInFrontOfObject()
 {
 	Super::MovePlayerInFrontOfObject();
 
-	PeepHoleState = EPS_Active;
+	PeepHoleState = EPS_ZoomingIn;
 	if (bTorchlightIsNeeded)
 	{
 		Torchlight->SetVisibility(true);
@@ -71,8 +89,11 @@ void APeepHole::RotateCameraWithinPeepHole(FHitResult& HitResult, float DeltaTim
 
 void APeepHole::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 {
-	PeepHoleState = EPS_NotActive;
-	Torchlight->SetVisibility(false);
-
 	Super::ReturnPlayerToFloor(Player);
+
+	PeepHoleState = EPS_NotActive;
+
+	// Reset components ready for another use
+	Torchlight->SetVisibility(false);
+	InteractCamSpringArm->TargetArmLength = StartingSpringArmLength;
 }
