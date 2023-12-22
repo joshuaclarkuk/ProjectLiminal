@@ -69,11 +69,8 @@ void APeepHole::Tick(float DeltaTime)
 				if (TorchClickSound && AudioComponent)
 				{
 					AudioComponent->Play();
+					AudioComponent->OnAudioFinished.AddDynamic(this, &APeepHole::ActivateTorch);
 				}
-
-				// Display light
-				Torchlight->SetVisibility(true);
-
 			}
 		}
 	}
@@ -123,4 +120,10 @@ void APeepHole::ReturnPlayerToFloor(AProjectLiminalCharacter* Player)
 	// Reset components ready for another use
 	Torchlight->SetVisibility(false);
 	InteractCamSpringArm->TargetArmLength = StartingSpringArmLength;
+}
+
+void APeepHole::ActivateTorch()
+{
+	AudioComponent->Stop();
+	Torchlight->SetVisibility(true);
 }

@@ -11,7 +11,6 @@
 #include "Characters/ProjectLiminalCharacter.h"
 #include "Inventory/Items/ItemBase.h"
 #include "Components/AudioComponent.h"
-#include "Objects/Codes/CodeSoundComponent.h"
 #include "Components/TextRenderComponent.h"
 #include "NiagaraComponent.h"
 

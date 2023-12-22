@@ -59,6 +59,8 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category = "Torchlight Settings")
 	USoundBase* TorchClickSound;
 
+	FTimerHandle LightActivationTimerHandle;
+
 	UPROPERTY(EditAnywhere, Category = "Camera Settings")
 	FVector StartingCameraLocation;
 
@@ -83,4 +85,7 @@ protected:
 	EPeepHoleState PeepHoleState = EPeepHoleState::EPS_NotActive;
 	AProjectLiminalPlayerController* PlayerControllerRef;
 	UCameraComponent* CameraComponent;
+
+	UFUNCTION()
+	void ActivateTorch();
 };
