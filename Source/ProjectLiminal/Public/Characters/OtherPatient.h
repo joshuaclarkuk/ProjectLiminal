@@ -3,42 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "GameFramework/Character.h"
 #include "OtherPatient.generated.h"
 
-class USkeletalMesh;
-
-UENUM()
-enum class EPatientState {
-	EPS_Waiting,
-	EPS_Called,
-	EPS_Travelling
-};
-
 UCLASS()
-class PROJECTLIMINAL_API AOtherPatient : public AActor
+class PROJECTLIMINAL_API AOtherPatient : public ACharacter
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	AOtherPatient();
 
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+public:
+	// Sets default values for this character's properties
+	AOtherPatient();
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PatientConfig")
-	USkeletalMesh* OtherPatientMesh;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "PatientConfig")
-	EPatientState PatientState;
-
-	/*GETTERS & SETTERS*/
 public:	
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
 
+	// Called to bind functionality to input
+	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 };
