@@ -26,7 +26,7 @@ void AOtherPatient::BeginPlay()
 	
 	AIController = Cast<AAIController>(GetController());
 	
-	MoveToNavigationTarget(KeypadNavigationTarget);
+	MoveToNavigationTarget(NavigationPoints[CurrentNavPointIndex]);
 }
 
 // Called every frame
@@ -34,6 +34,11 @@ void AOtherPatient::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (IsInRangeOfNavTarget(NavigationPoints[CurrentNavPointIndex]))
+	{
+		CurrentNavPointIndex++;
+		MoveToNavigationTarget(NavigationPoints[CurrentNavPointIndex]);
+	}
 }
 
 // Called to bind functionality to input
@@ -47,10 +52,10 @@ void AOtherPatient::MoveToNavigationTarget(AActor* TargetToMoveTo)
 {
 	if (AIController)
 	{
-		FAIMoveRequest MoveRequest;
-
 		if (TargetToMoveTo)
 		{
+			FAIMoveRequest MoveRequest;
+			MoveRequest.SetAcceptanceRadius(20.0f);
 			MoveRequest.SetGoalActor(TargetToMoveTo);
 			FNavPathSharedPtr NavPath;
 
@@ -66,7 +71,7 @@ void AOtherPatient::MoveToNavigationTarget(AActor* TargetToMoveTo)
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("%s has no current navigation target. Cannot navigate"), *GetActorNameOrLabel());
+			UE_LOG(LogTemp, Error, TEXT("%s does not have a valid target to move to"), *GetActorNameOrLabel());
 		}
 	}
 	else
@@ -75,12 +80,13 @@ void AOtherPatient::MoveToNavigationTarget(AActor* TargetToMoveTo)
 	}
 }
 
-bool AOtherPatient::IsInRangeOfNavTarget(AActor* NavTarget, double Radius) const
+bool AOtherPatient::IsInRangeOfNavTarget(AActor* NavTarget) const
 {
 	const double DistanceToNavTarget = (NavTarget->GetActorLocation() - GetActorLocation()).Size();
-	if (DistanceToNavTarget <= Radius)
+	if (DistanceToNavTarget <= NavTargetProximity)
 	{
 		return true;
+		UE_LOG(LogTemp, Display, TEXT("Is In Range"));
 	}
 	else
 	{

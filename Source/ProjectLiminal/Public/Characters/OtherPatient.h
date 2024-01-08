@@ -37,17 +37,11 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = "Navigation Points")
 	int32 CurrentNavPointIndex = 0;
 
-	UPROPERTY(EditInstanceOnly, Category = "Navigation Points")
-	AActor* KeypadNavigationTarget;
-
-	UPROPERTY(EditInstanceOnly, Category = "Navigation Points")
-	AActor* NextRoomNavigationTarget;
-
 	UPROPERTY(EditAnywhere, Category = "Navigation Points")
 	double NavTargetProximity = 100.0f;
 
 	UFUNCTION(BlueprintCallable)
 	void MoveToNavigationTarget(AActor* TargetToMoveTo);
 
-	bool IsInRangeOfNavTarget(AActor* NavTarget, double Radius) const;
+	bool IsInRangeOfNavTarget(AActor* NavTarget) const;
 };
