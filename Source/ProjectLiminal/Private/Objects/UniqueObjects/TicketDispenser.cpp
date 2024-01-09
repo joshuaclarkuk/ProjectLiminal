@@ -34,7 +34,14 @@ void ATicketDispenser::BeginPlay()
 	PlayerCharacter = Cast<AProjectLiminalCharacter>(UGameplayStatics::GetPlayerPawn(this, 0));
 
 	// Initialise Player Inventory reference
-	PlayerInventory = PlayerCharacter->GetComponentByClass<UInventoryComponent>();
+	if (PlayerCharacter)
+	{
+		PlayerInventory = PlayerCharacter->GetComponentByClass<UInventoryComponent>();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("PlayerCharacter not found by %s"), *GetActorNameOrLabel());
+	}
 
 	// Set timer to flicker light
 	GetWorldTimerManager().SetTimer(LightFadeTimerHandle, this, &ATicketDispenser::MakeLightFlicker, FMath::FRandRange(0.1f, 0.4f), true);

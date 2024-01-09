@@ -23,6 +23,9 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	UFUNCTION()
+	void MoveToNextNavTarget();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -40,8 +43,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = "Navigation Points")
 	double NavTargetProximity = 100.0f;
 
-	UFUNCTION(BlueprintCallable)
-	void MoveToNavigationTarget(AActor* TargetToMoveTo);
+	FTimerHandle NavigationDelayTimerHandle;
+	FTimerHandle NavigationCheckTimerHandle;
 
 	bool IsInRangeOfNavTarget(AActor* NavTarget) const;
+	void IncreaseNavIndexIfInRange();
 };

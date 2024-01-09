@@ -25,38 +25,35 @@ void AOtherPatient::BeginPlay()
 	Super::BeginPlay();
 	
 	AIController = Cast<AAIController>(GetController());
-	
-	MoveToNavigationTarget(NavigationPoints[CurrentNavPointIndex]);
+	if (AIController == nullptr)
+	{
+		UE_LOG(LogTemp, Error, TEXT("AIController cast failed on %s"), *GetActorNameOrLabel());
+	}
 }
 
 // Called every frame
 void AOtherPatient::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if (IsInRangeOfNavTarget(NavigationPoints[CurrentNavPointIndex]))
-	{
-		CurrentNavPointIndex++;
-		MoveToNavigationTarget(NavigationPoints[CurrentNavPointIndex]);
-	}
 }
 
 // Called to bind functionality to input
 void AOtherPatient::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
 
-void AOtherPatient::MoveToNavigationTarget(AActor* TargetToMoveTo)
+
+
+void AOtherPatient::MoveToNextNavTarget()
 {
 	if (AIController)
 	{
-		if (TargetToMoveTo)
+		if (CurrentNavPointIndex < NavigationPoints.Num())
 		{
 			FAIMoveRequest MoveRequest;
-			MoveRequest.SetAcceptanceRadius(20.0f);
-			MoveRequest.SetGoalActor(TargetToMoveTo);
+			MoveRequest.SetAcceptanceRadius(0.0f);
+			MoveRequest.SetGoalActor(NavigationPoints[CurrentNavPointIndex]);
 			FNavPathSharedPtr NavPath;
 
 			// NavPath requires "address of" operator as it's an out parameter that is a pointer, not a const reference
@@ -68,6 +65,8 @@ void AOtherPatient::MoveToNavigationTarget(AActor* TargetToMoveTo)
 			{
 				DrawDebugSphere(GetWorld(), Point.Location, 12.0f, 4, FColor::Green, false, 5.0f);
 			}
+
+			GetWorldTimerManager().SetTimer(NavigationCheckTimerHandle, this, &AOtherPatient::IncreaseNavIndexIfInRange, 1.0f, true);
 		}
 		else
 		{
@@ -91,6 +90,21 @@ bool AOtherPatient::IsInRangeOfNavTarget(AActor* NavTarget) const
 	else
 	{
 		return false;
+		UE_LOG(LogTemp, Display, TEXT("Out of Range"));
+	}
+}
+
+void AOtherPatient::IncreaseNavIndexIfInRange()
+{
+	if (IsInRangeOfNavTarget(NavigationPoints[CurrentNavPointIndex]) && CurrentNavPointIndex < NavigationPoints.Num() -1)
+	{
+		UE_LOG(LogTemp, Display, TEXT("Nav target in range, increasing index"));
+		CurrentNavPointIndex++;
+		MoveToNextNavTarget();
+	}
+	else
+	{
+		UE_LOG(LogTemp, Display, TEXT("Nav point not currently in range"));
 	}
 }
 
