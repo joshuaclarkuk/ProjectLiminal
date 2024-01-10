@@ -8,6 +8,9 @@
 
 class UBoxComponent;
 class AOtherPatient;
+class UStaticMeshComponent;
+class UMaterialInstance;
+class USoundBase;
 
 UCLASS()
 class PROJECTLIMINAL_API APatientCallTrigger : public AActor
@@ -28,8 +31,21 @@ protected:
 	UPROPERTY(EditInstanceOnly)
 	AOtherPatient* OtherPatientToCall;
 
+	UPROPERTY(EditInstanceOnly)
+	AActor* DisplayScreenActor;
+
+	UStaticMeshComponent* ScreenMeshComponent;
+
+	UPROPERTY(EditInstanceOnly)
+	UMaterialInstance* PatientDoorCodeDisplay;
+
+	UPROPERTY(EditInstanceOnly)
+	USoundBase* PatientCallSound;
+
 	UFUNCTION()
 	void OnTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	bool bHasBeenTriggered = false;
 
 public:	
 	// Called every frame

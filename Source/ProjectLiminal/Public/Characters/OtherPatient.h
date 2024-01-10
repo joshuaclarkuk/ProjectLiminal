@@ -24,7 +24,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UFUNCTION()
-	void MoveToNextNavTarget();
+	void PauseAndInitiateMovement();
+
+	void MoveToTarget();
 
 protected:
 	// Called when the game starts or when spawned

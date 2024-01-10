@@ -45,37 +45,42 @@ void AOtherPatient::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 
 
 
-void AOtherPatient::MoveToNextNavTarget()
+void AOtherPatient::PauseAndInitiateMovement()
 {
 	if (AIController)
 	{
-		if (CurrentNavPointIndex < NavigationPoints.Num())
-		{
-			FAIMoveRequest MoveRequest;
-			MoveRequest.SetAcceptanceRadius(0.0f);
-			MoveRequest.SetGoalActor(NavigationPoints[CurrentNavPointIndex]);
-			FNavPathSharedPtr NavPath;
-
-			// NavPath requires "address of" operator as it's an out parameter that is a pointer, not a const reference
-			AIController->MoveTo(MoveRequest, &NavPath);
-
-			// Display navigation path via debug spheres
-			TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
-			for (auto& Point : PathPoints)
-			{
-				DrawDebugSphere(GetWorld(), Point.Location, 12.0f, 4, FColor::Green, false, 5.0f);
-			}
-
-			GetWorldTimerManager().SetTimer(NavigationCheckTimerHandle, this, &AOtherPatient::IncreaseNavIndexIfInRange, 1.0f, true);
-		}
-		else
-		{
-			UE_LOG(LogTemp, Error, TEXT("%s does not have a valid target to move to"), *GetActorNameOrLabel());
-		}
+		GetWorldTimerManager().SetTimer(NavigationDelayTimerHandle, this, &AOtherPatient::MoveToTarget, 5.0f, false);
 	}
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("AI Controller could not be found/cast on %s"), *GetActorNameOrLabel());
+	}
+}
+
+void AOtherPatient::MoveToTarget()
+{
+	if (CurrentNavPointIndex < NavigationPoints.Num())
+	{
+		FAIMoveRequest MoveRequest;
+		MoveRequest.SetAcceptanceRadius(0.0f);
+		MoveRequest.SetGoalActor(NavigationPoints[CurrentNavPointIndex]);
+		FNavPathSharedPtr NavPath;
+
+		// NavPath requires "address of" operator as it's an out parameter that is a pointer, not a const reference
+		AIController->MoveTo(MoveRequest, &NavPath);
+
+		// Display navigation path via debug spheres
+		TArray<FNavPathPoint>& PathPoints = NavPath->GetPathPoints();
+		for (auto& Point : PathPoints)
+		{
+			DrawDebugSphere(GetWorld(), Point.Location, 12.0f, 4, FColor::Green, false, 5.0f);
+		}
+
+		GetWorldTimerManager().SetTimer(NavigationCheckTimerHandle, this, &AOtherPatient::IncreaseNavIndexIfInRange, 1.0f, true);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s does not have a valid target to move to"), *GetActorNameOrLabel());
 	}
 }
 
@@ -100,7 +105,7 @@ void AOtherPatient::IncreaseNavIndexIfInRange()
 	{
 		UE_LOG(LogTemp, Display, TEXT("Nav target in range, increasing index"));
 		CurrentNavPointIndex++;
-		MoveToNextNavTarget();
+		PauseAndInitiateMovement();
 	}
 	else
 	{
