@@ -28,7 +28,7 @@ void APatientCallTrigger::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	DrawDebugBox(GetWorld(), GetActorLocation(), FVector(30.0f, 30.0f, 30.0f), FColor::Green, false, 10.0f);
+	// DrawDebugBox(GetWorld(), GetActorLocation(), FVector(30.0f, 30.0f, 30.0f), FColor::Green, false, 10.0f);
 
 	// Assign reference to screenmeshcomponent
 	ScreenMeshComponent = DisplayScreenActor->GetComponentByClass<UStaticMeshComponent>();
@@ -49,6 +49,17 @@ void APatientCallTrigger::OnTriggerOverlap(UPrimitiveComponent* OverlappedCompon
 	if (bHasBeenTriggered) { return; }
 
 	// Trigger Patient navigation code
+	TriggerNavigation();
+
+	// Switches Material Instance on DisplayScreen
+	DisplayPatientCodeMaterial();
+
+	// Trigger Noise
+	PlayCallNoise();
+}
+
+void APatientCallTrigger::TriggerNavigation()
+{
 	if (OtherPatientToCall)
 	{
 		UE_LOG(LogTemp, Display, TEXT("Navigation triggered"));
@@ -59,8 +70,10 @@ void APatientCallTrigger::OnTriggerOverlap(UPrimitiveComponent* OverlappedCompon
 	{
 		UE_LOG(LogTemp, Error, TEXT("No OtherPatientToCall assigned to %s"), *GetActorNameOrLabel());
 	}
+}
 
-	// Trigger Screen display code
+void APatientCallTrigger::DisplayPatientCodeMaterial()
+{
 	if (DisplayScreenActor)
 	{
 		if (ScreenMeshComponent)
@@ -83,8 +96,10 @@ void APatientCallTrigger::OnTriggerOverlap(UPrimitiveComponent* OverlappedCompon
 	{
 		UE_LOG(LogTemp, Error, TEXT("No screen actor reference found on %s"), *GetActorNameOrLabel());
 	}
+}
 
-	// Trigger Noise
+void APatientCallTrigger::PlayCallNoise()
+{
 	if (PatientCallSound)
 	{
 		UGameplayStatics::PlaySoundAtLocation(this, PatientCallSound, DisplayScreenActor->GetActorLocation());

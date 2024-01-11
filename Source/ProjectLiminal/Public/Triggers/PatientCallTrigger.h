@@ -28,22 +28,26 @@ protected:
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* BoxTrigger;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
 	AOtherPatient* OtherPatientToCall;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
 	AActor* DisplayScreenActor;
 
-	UStaticMeshComponent* ScreenMeshComponent;
-
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
 	UMaterialInstance* PatientDoorCodeDisplay;
 
-	UPROPERTY(EditInstanceOnly)
+	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
 	USoundBase* PatientCallSound;
 
 	UFUNCTION()
 	void OnTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	void TriggerNavigation();
+	void DisplayPatientCodeMaterial();
+	void PlayCallNoise();
+
+	UStaticMeshComponent* ScreenMeshComponent;
 
 	bool bHasBeenTriggered = false;
 
