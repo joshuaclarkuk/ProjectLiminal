@@ -71,7 +71,8 @@ void APatientReachDoorTrigger::SetDefaultDisplayScreenMaterial()
 		}
 		else
 		{
-			UE_LOG(LogTemp, Error, TEXT("No ScreenMeshComponent found on %s, might need to drag in new DisplayScreen reference"), *GetActorNameOrLabel());
+			UE_LOG(LogTemp, Error, TEXT("No ScreenMeshComponent found on %s, setting to null"), *GetActorNameOrLabel());
+			ScreenMeshComponent->SetMaterial(0, NULL);
 		}
 	}
 	else

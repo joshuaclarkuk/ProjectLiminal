@@ -59,7 +59,7 @@ void AOtherPatient::PauseAndInitiateMovement()
 
 void AOtherPatient::MoveToTarget()
 {
-	if (CurrentNavPointIndex < NavigationPoints.Num())
+	if (CurrentNavPointIndex < NavigationPoints.Num() && NavigationPoints[CurrentNavPointIndex])
 	{
 		FAIMoveRequest MoveRequest;
 		MoveRequest.SetAcceptanceRadius(0.0f);
@@ -101,11 +101,20 @@ bool AOtherPatient::IsInRangeOfNavTarget(AActor* NavTarget) const
 
 void AOtherPatient::IncreaseNavIndexIfInRange()
 {
-	if (IsInRangeOfNavTarget(NavigationPoints[CurrentNavPointIndex]) && CurrentNavPointIndex < NavigationPoints.Num() -1)
+	if (IsInRangeOfNavTarget(NavigationPoints[CurrentNavPointIndex]))
 	{
 		UE_LOG(LogTemp, Display, TEXT("Nav target in range, increasing index"));
 		CurrentNavPointIndex++;
-		PauseAndInitiateMovement();
+
+		if (CurrentNavPointIndex < NavigationPoints.Num())
+		{
+			PauseAndInitiateMovement();
+		}
+		else if (CurrentNavPointIndex == NavigationPoints.Num())
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Reached end of NavigationPoints list, destroying %s"), *GetActorNameOrLabel());
+			Destroy();
+		}
 	}
 	else
 	{

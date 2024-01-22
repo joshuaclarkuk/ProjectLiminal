@@ -11,6 +11,7 @@ class AOtherPatient;
 class UStaticMeshComponent;
 class UMaterialInstance;
 class USoundBase;
+class ALight;
 
 UCLASS()
 class PROJECTLIMINAL_API APatientCallTrigger : public AActor
@@ -40,12 +41,16 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
 	USoundBase* PatientCallSound;
 
+	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
+	ALight* CallLightOverDoor;
+
 	UFUNCTION()
 	void OnTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
 	void TriggerNavigation();
 	void DisplayPatientCodeMaterial();
 	void PlayCallNoise();
+	void EnableCallLightOverDoor();
 
 	UStaticMeshComponent* ScreenMeshComponent;
 

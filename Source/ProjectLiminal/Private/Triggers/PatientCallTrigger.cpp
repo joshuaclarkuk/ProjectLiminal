@@ -8,7 +8,8 @@
 #include "Materials/MaterialInstance.h"
 #include "Sound/SoundBase.h"
 #include "Kismet/GameplayStatics.h"
-
+#include "Engine/Light.h"
+#include "Components/LightGradualFadeComponent.h"
 
 // Sets default values
 APatientCallTrigger::APatientCallTrigger()
@@ -56,6 +57,9 @@ void APatientCallTrigger::OnTriggerOverlap(UPrimitiveComponent* OverlappedCompon
 
 	// Trigger Noise
 	PlayCallNoise();
+
+	// Fade in Light over door
+	EnableCallLightOverDoor();
 }
 
 void APatientCallTrigger::TriggerNavigation()
@@ -107,6 +111,26 @@ void APatientCallTrigger::PlayCallNoise()
 	else
 	{
 		UE_LOG(LogTemp, Error, TEXT("No PatientCallSound entered on %s"), *GetActorNameOrLabel());
+	}
+}
+
+void APatientCallTrigger::EnableCallLightOverDoor()
+{
+	if (CallLightOverDoor)
+	{
+		ULightGradualFadeComponent* LightFadeComponent = CallLightOverDoor->GetComponentByClass<ULightGradualFadeComponent>();
+		if (LightFadeComponent)
+		{
+			LightFadeComponent->ToggleLight(true);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("Can't access light fade component on call light"));
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Call Light Over Door found on %s"), *GetActorNameOrLabel());
 	}
 }
 

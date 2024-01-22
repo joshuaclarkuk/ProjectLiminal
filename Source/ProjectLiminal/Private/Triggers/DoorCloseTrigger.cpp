@@ -4,6 +4,11 @@
 #include "Triggers/DoorCloseTrigger.h"
 #include "Components/BoxComponent.h"
 #include "Components/MoveWithInterpComponent.h"
+#include "Engine/Light.h"
+#include "Components/LightGradualFadeComponent.h"
+#include "Components/LightDisableComponent.h"
+
+class ULightGradualFadeComponent;
 
 // Sets default values
 ADoorCloseTrigger::ADoorCloseTrigger()
@@ -26,7 +31,20 @@ void ADoorCloseTrigger::BeginPlay()
 	BoxTrigger->OnComponentBeginOverlap.AddDynamic(this, &ADoorCloseTrigger::OnTriggerOverlap);
 }
 
+// Called every frame
+void ADoorCloseTrigger::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+
+}
+
 void ADoorCloseTrigger::OnTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	CloseDoor();
+	TurnOffCallLight();
+}
+
+void ADoorCloseTrigger::CloseDoor()
 {
 	if (DoorToClose)
 	{
@@ -43,14 +61,37 @@ void ADoorCloseTrigger::OnTriggerOverlap(UPrimitiveComponent* OverlappedComponen
 	}
 	else
 	{
-		UE_LOG(LogTemp, Error, TEXT("No DoorToClose assigned to %s"), * GetActorNameOrLabel());
+		UE_LOG(LogTemp, Error, TEXT("No DoorToClose assigned to %s"), *GetActorNameOrLabel());
 	}
 }
 
-// Called every frame
-void ADoorCloseTrigger::Tick(float DeltaTime)
+void ADoorCloseTrigger::TurnOffCallLight()
 {
-	Super::Tick(DeltaTime);
+	if (LightToDisable)
+	{
+		ULightGradualFadeComponent* LightFade = LightToDisable->GetComponentByClass<ULightGradualFadeComponent>();
+		if (LightFade)
+		{
+			LightFade->ToggleLight(false);
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("No Light Fade Component found on %s"), *GetActorNameOrLabel());
+		}
 
+		ULightDisableComponent* LightDisable = LightToDisable->GetComponentByClass<ULightDisableComponent>();
+		if (LightDisable)
+		{
+			LightDisable->DisableLight();
+		}
+		else
+		{
+			UE_LOG(LogTemp, Error, TEXT("No Light Disable Component found on %s"), *GetActorNameOrLabel());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("No Call Light Reference on %s"), *GetActorNameOrLabel());
+	}
 }
 

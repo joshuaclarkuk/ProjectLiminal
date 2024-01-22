@@ -7,6 +7,7 @@
 #include "DoorCloseTrigger.generated.h"
 
 class UBoxComponent;
+class ALight;
 
 UCLASS()
 class PROJECTLIMINAL_API ADoorCloseTrigger : public AActor
@@ -30,6 +31,14 @@ protected:
 	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
 	AActor* DoorToClose;
 
+	UPROPERTY(EditInstanceOnly, Category = "Trigger Config")
+	ALight* LightToDisable;
+
 	UFUNCTION()
 	void OnTriggerOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+private:
+	void CloseDoor();
+	void TurnOffCallLight();
+
 };
