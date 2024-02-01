@@ -37,7 +37,12 @@ void ULightDisableComponent::DisableLight()
 {
 	if (LightComponentToDisable)
 	{
-		LightComponentToDisable->ToggleVisibility(false);
+		if (bIsTurnedOff) { return; }
+
+		LightComponentToDisable->GetOwner()->SetActorTickEnabled(false);
+		LightComponentToDisable->GetOwner()->SetActorHiddenInGame(true);
+		LightComponentToDisable->GetOwner()->SetActorEnableCollision(false);
+		bIsTurnedOff = true;
 	}
 	else
 	{

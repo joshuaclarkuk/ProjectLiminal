@@ -135,6 +135,9 @@ void ACodeMachine::SilenceAudioComponentsOnStart()
 		if (AudioComponents[i])
 		{
 			AudioComponents[i]->FadeOut(0.0f, 0.0f);
+
+			// Primes key press audio to prevent initial delay on first play
+			UGameplayStatics::PrimeSound(AudioComponents[i]->GetSound());
 		}
 	}
 }

@@ -28,4 +28,6 @@ protected:
 
 private:
 	ULightComponent* LightComponentToDisable;
+
+	bool bIsTurnedOff = false;
 };
